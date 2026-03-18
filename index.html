@@ -3,1310 +3,829 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Главная — Создай сайт для сервера майнкрафт для правил вот о</title>
-  <meta property="og:title" content="Главная — Создай сайт для сервера майнкрафт для правил вот о">
+  <title>[SERVER_NAME] — Правила Minecraft сервера</title>
+  <meta name="description" content="Официальные правила Minecraft сервера [SERVER_NAME]. Тактическая командная игра, захват флага, уничтожение баз. Версия 1.21.1.">
   <script src="https://cdn.tailwindcss.com"></script>
-  <meta name="description" content="Официальные правила Minecraft сервера EpicWar — тактическая командная игра, захват флага, уничтожение баз. Версия 1.21.1.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://unpkg.com/lucide@0.469.0"></script>
-<style>
-  * { box-sizing: border-box; }
-  body { background: #111111; color: #f5f5f5; font-family: 'Inter', sans-serif; }
-
-  .font-serif { font-family: 'DM Serif Display', serif; }
-  .font-mono { font-family: 'IBM Plex Mono', monospace; }
-
-  /* Header scroll */
-  #main-header { transition: background 0.4s ease, backdrop-filter 0.4s ease; }
-  #main-header.wvibe-scrolled {
-    background: rgba(17, 17, 17, 0.97) !important;
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-  #main-header.wvibe-scrolled .nav-link { color: #f5f5f5; }
-  #main-header.wvibe-scrolled .logo-text { color: #f5f5f5; }
-
-  /* Fade-in */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
-  }
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Rule card */
-  .rule-card {
-    border-top: 1px solid rgba(255,255,255,0.08);
-    transition: border-color 0.3s ease;
-  }
-  .rule-card:hover { border-color: rgba(255, 107, 53, 0.4); }
-
-  /* FAQ / accordion */
-  .faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, padding 0.3s ease;
-  }
-  .faq-answer.open { max-height: 600px; }
-  .faq-icon { transition: transform 0.4s ease; }
-  .faq-icon.rotated { transform: rotate(45deg); }
-
-  /* Punishment step */
-  .punish-step {
-    position: relative;
-    transition: transform 0.3s ease;
-  }
-  .punish-step:hover { transform: translateX(8px); }
-
-  /* Number counter */
-  .counter-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(3rem, 8vw, 5rem);
-    line-height: 1;
-    color: #FF6B35;
-  }
-
-  /* IP copy button */
-  #ip-display {
-    font-family: 'IBM Plex Mono', monospace;
-    letter-spacing: 0.05em;
-    user-select: all;
-  }
-
-  /* Mobile menu */
-  #mobile-menu {
-    background: rgba(17,17,17,0.98);
-    border-top: 1px solid rgba(255,255,255,0.08);
-  }
-
-  /* Divider line */
-  .section-divider {
-    width: 40px;
-    height: 2px;
-    background: #FF6B35;
-    margin: 0 auto 32px;
-  }
-
-  /* Tag badge */
-  .badge {
-    display: inline-block;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    border: 1px solid rgba(255,107,53,0.4);
-    color: #FF6B35;
-  }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: #111; }
-  ::-webkit-scrollbar-thumb { background: #FF6B35; }
-
-  /* Section number */
-  .section-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 120px;
-    line-height: 1;
-    color: rgba(255,255,255,0.03);
-    position: absolute;
-    top: -20px;
-    left: -10px;
-    pointer-events: none;
-    user-select: none;
-  }
-</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@0.469.0"></script>
   <style>
-header.wvibe-needs-shadow:not(.wvibe-scrolled) a,
-header.wvibe-needs-shadow:not(.wvibe-scrolled)>div span,
-header.wvibe-needs-shadow:not(.wvibe-scrolled)>div>a span{
-  text-shadow:0 0 8px rgba(0,0,0,0.3);
-}
-header.wvibe-scrolled a,header.wvibe-scrolled span{text-shadow:none;}
-header button{text-shadow:none !important;}
-header a[class*="bg-"],header a[class*="gradient"],header a[class*="btn"],
-header a[style*="background"]{text-shadow:none !important;}
-</style>
-<script>
-document.addEventListener('DOMContentLoaded',function(){
-  var h=document.querySelector('header');
-  if(!h)return;
-  var bg=h.style.background||h.style.backgroundColor||'';
-  if(!bg||bg==='none'||bg==='transparent'||bg.indexOf('rgba')!==-1)
-    h.classList.add('wvibe-needs-shadow');
-});
-</script>
-  <style>
-html,body{overflow-x:hidden;max-width:100vw;}
-section{overflow-x:hidden;}
-</style>
+    * { box-sizing: border-box; }
+    body { background: #111111; color: #f5f5f5; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+    .font-serif { font-family: 'DM Serif Display', serif; }
+    .font-mono { font-family: 'IBM Plex Mono', monospace; }
 
-<meta property="og:title" content="Создай сайт для сервера майнкрафт для правил вот о" />
-<meta property="og:description" content="Сайт создан на WVibe — AI конструктор сайтов" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://wvibe.ru/s/5cefxg3ZiI" />
-<meta property="og:site_name" content="WVibe" />
+    /* Header scroll */
+    #main-header { transition: background 0.4s ease, backdrop-filter 0.4s ease; }
+    #main-header.scrolled {
+      background: rgba(17, 17, 17, 0.97) !important;
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    #main-header.scrolled .nav-link { color: #f5f5f5; }
+    #main-header.scrolled .logo-text { color: #f5f5f5; }
+
+    /* Fade-in */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Rule card */
+    .rule-card {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      transition: border-color 0.3s ease;
+    }
+    .rule-card:hover { border-color: rgba(255, 107, 53, 0.4); }
+
+    /* FAQ / accordion */
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease, padding 0.3s ease;
+    }
+    .faq-answer.open { max-height: 600px; }
+    .faq-icon { transition: transform 0.4s ease; }
+    .faq-icon.rotated { transform: rotate(45deg); }
+
+    /* Punishment step */
+    .punish-step {
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    .punish-step:hover { transform: translateX(8px); }
+
+    /* Number counter */
+    .counter-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3rem, 8vw, 5rem);
+      line-height: 1;
+      color: #FF6B35;
+    }
+
+    /* IP copy button */
+    #ip-display {
+      font-family: 'IBM Plex Mono', monospace;
+      letter-spacing: 0.05em;
+      user-select: all;
+    }
+
+    /* Mobile menu */
+    #mobile-menu {
+      background: rgba(17,17,17,0.98);
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Divider line */
+    .section-divider {
+      width: 40px;
+      height: 2px;
+      background: #FF6B35;
+      margin: 0 auto 32px;
+    }
+
+    /* Tag badge */
+    .badge {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border: 1px solid rgba(255,107,53,0.4);
+      color: #FF6B35;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #FF6B35; }
+  </style>
 </head>
 <body>
   <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-  <div class="max-w-6xl mx-auto px-6 lg:px-8">
-    <div class="flex items-center justify-between h-20">
-      <!-- Logo -->
-      <a href="#hero" class="flex items-center gap-3">
-        <div class="w-9 h-9 bg-red-600 flex items-center justify-center" style="background:#FF6B35;">
-          <span class="text-white font-bold text-sm font-mono">EW</span>
-        </div>
-        <span class="logo-text text-white font-bold tracking-widest text-sm uppercase font-mono">EpicWar</span>
-      </a>
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo -->
+        <a href="#hero" class="flex items-center gap-3">
+          <div class="w-9 h-9 bg-red-600 flex items-center justify-center" style="background:#FF6B35;">
+            <span class="text-white font-bold text-sm font-mono">[ЛОГО]</span>
+          </div>
+          <span class="logo-text text-white font-bold tracking-widest text-sm uppercase font-mono">[SERVER_NAME]</span>
+        </a>
 
-      <!-- Desktop Nav -->
-      <nav class="hidden lg:flex items-center gap-10">
+        <!-- Desktop Nav -->
+        <nav class="hidden lg:flex items-center gap-10">
+          <a href="#goal" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Цель игры</a>
+          <a href="#rules" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Правила</a>
+          <a href="#punishments" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Наказания</a>
+          <a href="#faq" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">FAQ</a>
+          <a href="#join" class="bg-white text-black px-6 py-2.5 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300">Играть</a>
+        </nav>
+
+        <!-- Burger -->
+        <button class="lg:hidden p-2 text-white" aria-label="Меню" id="menu-toggle">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden lg:hidden px-6 py-6">
+      <nav class="flex flex-col gap-5">
         <a href="#goal" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Цель игры</a>
         <a href="#rules" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Правила</a>
         <a href="#punishments" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Наказания</a>
         <a href="#faq" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">FAQ</a>
-        <a href="#join" class="bg-white text-black px-6 py-2.5 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300">Играть</a>
+        <a href="#join" class="bg-white text-black px-6 py-3 text-xs font-semibold uppercase tracking-widest text-center hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 mt-2">Играть</a>
       </nav>
-
-      <!-- Burger -->
-      <button class="lg:hidden p-2 text-white" aria-label="Меню">
-        <i data-lucide="menu" class="w-6 h-6"></i>
-      </button>
     </div>
-  </div>
+  </header>
 
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden lg:hidden px-6 py-6">
-    <nav class="flex flex-col gap-5">
-      <a href="#goal" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Цель игры</a>
-      <a href="#rules" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Правила</a>
-      <a href="#punishments" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Наказания</a>
-      <a href="#faq" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">FAQ</a>
-      <a href="#join" class="bg-white text-black px-6 py-3 text-xs font-semibold uppercase tracking-widest text-center hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 mt-2">Играть</a>
-    </nav>
-  </div>
-</header>
-  <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
-<!-- SECTION: hero -->
-<section id="hero" class="min-h-screen flex items-center justify-center px-6 relative overflow-hidden" style="background:#111111;">
-  <!-- Subtle grid overlay -->
-  <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 60px 60px;"></div>
+  <!-- HERO -->
+  <section id="hero" class="min-h-screen flex items-center justify-center px-6 relative overflow-hidden" style="background:#111111;">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 60px 60px;"></div>
 
-  <div class="max-w-5xl text-center relative z-10">
-    <p class="font-mono text-xs uppercase tracking-[0.4em] text-white/30 mb-10 fade-in">Minecraft · Java 1.21.1 · Командный режим</p>
+    <div class="max-w-5xl text-center relative z-10">
+      <p class="font-mono text-xs uppercase tracking-[0.4em] text-white/30 mb-10 fade-in">Minecraft · Java 1.21.1 · Командный режим</p>
 
-    <h1 class="font-serif font-normal tracking-tight leading-[0.88] text-white fade-in" style="font-size: clamp(3.5rem, 11vw, 9rem); font-family:'DM Serif Display',serif;">
-      Эпичное<br><em style="color:#FF6B35;">противо</em>стояние
-    </h1>
+      <h1 class="font-serif font-normal tracking-tight leading-[0.88] text-white fade-in" style="font-size: clamp(3.5rem, 11vw, 9rem); font-family:'DM Serif Display',serif;">
+        Эпичное<br><em style="color:#FF6B35;">противо</em>стояние
+      </h1>
 
-    <p class="mt-10 text-base text-white/40 font-light max-w-lg mx-auto leading-relaxed fade-in">
-      Тактика, стратегия, командная работа. Взрывай базы врага, захвати флаг и приведи свою команду к победе.
-    </p>
-
-    <div class="flex flex-col sm:flex-row justify-center gap-4 mt-12 fade-in">
-      <a href="#rules" class="bg-white text-black px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300">
-        Читать правила
-      </a>
-      <a href="#join" class="border border-white/20 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-colors duration-300">
-        Присоединиться
-      </a>
-    </div>
-
-    <!-- Stats row -->
-    <div class="mt-20 flex flex-col sm:flex-row justify-center gap-12 sm:gap-16 fade-in">
-      <div>
-        <p class="font-serif text-4xl text-white" style="font-family:'DM Serif Display',serif;">4</p>
-        <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Базы команды</p>
-      </div>
-      <div class="hidden sm:block w-px bg-white/10"></div>
-      <div>
-        <p class="font-serif text-4xl text-white" style="font-family:'DM Serif Display',serif;">2</p>
-        <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Команды</p>
-      </div>
-      <div class="hidden sm:block w-px bg-white/10"></div>
-      <div>
-        <p class="font-serif text-4xl" style="font-family:'DM Serif Display',serif; color:#FF6B35;">1</p>
-        <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Победитель</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════ GOAL ═══════════════════════════════ -->
-<!-- SECTION: goal -->
-<section id="goal" class="py-32 lg:py-40 px-6" style="background:#111111;">
-  <div class="max-w-6xl mx-auto">
-    <div class="fade-in mb-20">
-      <span class="badge mb-6 block w-fit">Цель игры</span>
-      <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:700px;">
-        Три задачи до победы
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-0">
-      <!-- Step 1 -->
-      <div class="rule-card pt-10 pb-10 pr-8 fade-in">
-        <div class="flex items-start gap-4 mb-6">
-          <span class="font-mono text-xs text-white/25 mt-1">01</span>
-          <div class="w-10 h-10 flex items-center justify-center border border-white/10">
-            <i data-lucide="zap" class="w-5 h-5" style="color:#FF6B35;"></i>
-          </div>
-        </div>
-        <h3 class="text-xl font-semibold text-white mb-3">Взорви все базы</h3>
-        <p class="text-sm text-white/40 leading-relaxed">
-          Уничтожь все 4 базы вражеской команды. Каждая должна быть полностью разрушена. Планируй атаку — не иди напролом.
-        </p>
-        <p class="font-mono text-xs text-white/20 mt-6 uppercase tracking-widest">4 базы · полное разрушение</p>
-      </div>
-
-      <!-- Step 2 -->
-      <div class="rule-card pt-10 pb-10 px-8 fade-in" style="border-left: 1px solid rgba(255,255,255,0.08);">
-        <div class="flex items-start gap-4 mb-6">
-          <span class="font-mono text-xs text-white/25 mt-1">02</span>
-          <div class="w-10 h-10 flex items-center justify-center border border-white/10">
-            <i data-lucide="flag" class="w-5 h-5" style="color:#FF6B35;"></i>
-          </div>
-        </div>
-        <h3 class="text-xl font-semibold text-white mb-3">Захвати флаг</h3>
-        <p class="text-sm text-white/40 leading-relaxed">
-          Проберись на главную базу противника, забери флаг и доставь его к себе. Носителя флага будут преследовать — прикрывай его.
-        </p>
-        <p class="font-mono text-xs text-white/20 mt-6 uppercase tracking-widest">Главная база · доставка</p>
-      </div>
-
-      <!-- Step 3 -->
-      <div class="rule-card pt-10 pb-10 pl-8 fade-in" style="border-left: 1px solid rgba(255,255,255,0.08);">
-        <div class="flex items-start gap-4 mb-6">
-          <span class="font-mono text-xs text-white/25 mt-1">03</span>
-          <div class="w-10 h-10 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.4);">
-            <i data-lucide="trophy" class="w-5 h-5" style="color:#FF6B35;"></i>
-          </div>
-        </div>
-        <h3 class="text-xl font-semibold text-white mb-3">Победа</h3>
-        <p class="text-sm text-white/40 leading-relaxed">
-          Как только флаг окажется на вашей базе — вы победители. Команда, выполнившая все три условия первой, забирает матч.
-        </p>
-        <p class="font-mono text-xs mt-6 uppercase tracking-widest" style="color:rgba(255,107,53,0.5);">Финальный этап</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═════════════════════════════ TEAMWORK ═════════════════════════════ -->
-<!-- SECTION: teamwork -->
-<section id="teamwork" class="py-32 lg:py-40 px-6" style="background:#0d0d0d;">
-  <div class="max-w-6xl mx-auto">
-    <div class="fade-in mb-20 text-center">
-      <span class="badge mb-6 block w-fit mx-auto">Командная игра</span>
-      <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif;">
-        Одиночкам здесь не выжить
-      </h2>
-      <p class="mt-5 text-white/35 text-base max-w-xl mx-auto leading-relaxed">
-        Только сплочённая команда, где каждый знает свою роль, сможет одержать победу.
+      <p class="mt-10 text-base text-white/40 font-light max-w-lg mx-auto leading-relaxed fade-in">
+        Тактика, стратегия, командная работа. Взрывай базы врага, захвати флаг и приведи свою команду к победе.
       </p>
-    </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-white/8 fade-in">
-      <div class="p-8 lg:p-10 border-b sm:border-b-0 border-white/8 sm:border-r hover:bg-white/[0.02] transition-colors duration-300">
-        <i data-lucide="trending-up" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
-        <h3 class="text-base font-semibold text-white mb-3">Развиваться</h3>
-        <p class="text-sm text-white/40 leading-relaxed">Добывайте ресурсы, крафтите броню и оружие. Чем сильнее команда — тем ближе победа.</p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4 mt-12 fade-in">
+        <a href="#rules" class="bg-white text-black px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300">
+          Читать правила
+        </a>
+        <a href="#join" class="border border-white/20 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-colors duration-300">
+          Присоединиться
+        </a>
       </div>
-      <div class="p-8 lg:p-10 border-b sm:border-b-0 border-white/8 lg:border-r hover:bg-white/[0.02] transition-colors duration-300">
-        <i data-lucide="shield" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
-        <h3 class="text-base font-semibold text-white mb-3">Защищать базу</h3>
-        <p class="text-sm text-white/40 leading-relaxed">Не давайте разрушить ваши базы. Стройте укрепления, ставьте ловушки, охраняйте флаг.</p>
-      </div>
-      <div class="p-8 lg:p-10 border-b lg:border-b-0 border-white/8 sm:border-r hover:bg-white/[0.02] transition-colors duration-300">
-        <i data-lucide="users" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
-        <h3 class="text-base font-semibold text-white mb-3">Распределять роли</h3>
-        <p class="text-sm text-white/40 leading-relaxed">Разведка, защита тыла, тяжёлая атака. Договаривайтесь и действуйте как единый механизм.</p>
-      </div>
-      <div class="p-8 lg:p-10 hover:bg-white/[0.02] transition-colors duration-300">
-        <i data-lucide="crosshair" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
-        <h3 class="text-base font-semibold text-white mb-3">Стратегия</h3>
-        <p class="text-sm text-white/40 leading-relaxed">Воруй ресурсы врага — это легально. Ослабляй противника, прежде чем идти на финальный штурм.</p>
-      </div>
-    </div>
 
-    <!-- Important note -->
-    <div class="mt-12 p-8 border border-white/8 fade-in">
-      <div class="flex flex-col sm:flex-row gap-6 items-start">
-        <i data-lucide="info" class="w-5 h-5 text-white/30 mt-0.5 flex-shrink-0"></i>
+      <!-- Stats row -->
+      <div class="mt-20 flex flex-col sm:flex-row justify-center gap-12 sm:gap-16 fade-in">
         <div>
-          <p class="text-sm text-white/50 leading-relaxed">
-            <span class="text-white font-medium">Важно:</span> Игра идёт до тех пор, пока одна из команд не выполнит все условия победы. Воровать ресурсы у врага в рамках конфликта — <span style="color:#FF6B35;">нормальная тактика</span>. Носитель флага должен быть прикрыт командой — враги будут охотиться за ним.
-          </p>
+          <p class="font-serif text-4xl text-white" style="font-family:'DM Serif Display',serif;">4</p>
+          <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Базы команды</p>
+        </div>
+        <div class="hidden sm:block w-px bg-white/10"></div>
+        <div>
+          <p class="font-serif text-4xl text-white" style="font-family:'DM Serif Display',serif;">2</p>
+          <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Команды</p>
+        </div>
+        <div class="hidden sm:block w-px bg-white/10"></div>
+        <div>
+          <p class="font-serif text-4xl" style="font-family:'DM Serif Display',serif; color:#FF6B35;">1</p>
+          <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Победитель</p>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
-<!-- ═════════════════════════════ RULES ═════════════════════════════ -->
-<!-- SECTION: rules -->
-<section id="rules" class="py-32 lg:py-40 px-6" style="background:#111111;">
-  <div class="max-w-6xl mx-auto">
-    <div class="fade-in mb-20">
-      <span class="badge mb-6 block w-fit">Правила сервера</span>
-      <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:650px;">
-        Обязательно к прочтению
-      </h2>
-      <p class="mt-5 text-white/35 text-base max-w-xl leading-relaxed">
-        Нарушения фиксируются. 3 предупреждения — перманентный бан. Мы небольшая команда, поэтому каждый игрок на виду.
-      </p>
-    </div>
-
-    <div class="space-y-0 fade-in">
-
-      <!-- Rule 1: Chat -->
-      <div class="rule-card py-10">
-        <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
-          <div class="flex-shrink-0">
-            <div class="flex items-center gap-4 mb-3">
-              <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 1</span>
-              <i data-lucide="message-square" class="w-4 h-4 text-white/25"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-white lg:w-48">Общение и культура в чате</h3>
-          </div>
-          <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div class="flex gap-3">
-              <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
-                <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
-              </div>
-              <div>
-                <p class="text-sm font-medium text-white mb-1">Мат запрещён</p>
-                <p class="text-xs text-white/35 leading-relaxed">В любом виде, включая замену букв символами.</p>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
-                <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
-              </div>
-              <div>
-                <p class="text-sm font-medium text-white mb-1">Оскорбления</p>
-                <p class="text-xs text-white/35 leading-relaxed">У нас дружелюбное сообщество. Без токсика.</p>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(239,68,68,0.4);">
-                <span class="text-xs font-mono text-red-400">!!!</span>
-              </div>
-              <div>
-                <p class="text-sm font-medium text-white mb-1">Реклама = мгновенный бан</p>
-                <p class="text-xs text-white/35 leading-relaxed">Любые сторонние серверы, ресурсы, проекты.</p>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
-                <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
-              </div>
-              <div>
-                <p class="text-sm font-medium text-white mb-1">Спам и флуд</p>
-                <p class="text-xs text-white/35 leading-relaxed">Это мешает общению всей команды.</p>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- GOAL -->
+  <section id="goal" class="py-32 lg:py-40 px-6" style="background:#111111;">
+    <div class="max-w-6xl mx-auto">
+      <div class="fade-in mb-20">
+        <span class="badge mb-6 block w-fit">Цель игры</span>
+        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:700px;">
+          Три задачи до победы
+        </h2>
       </div>
 
-      <!-- Rule 2: PvP -->
-      <div class="rule-card py-10">
-        <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
-          <div class="flex-shrink-0">
-            <div class="flex items-center gap-4 mb-3">
-              <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 2</span>
-              <i data-lucide="sword" class="w-4 h-4 text-white/25"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-white lg:w-48">PvP и взаимодействие</h3>
-          </div>
-          <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div class="flex gap-3">
-              <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
-                <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
-              </div>
-              <div>
-                <p class="text-sm font-medium text-white mb-1">Нейтральный игрок — неприкосновенен</p>
-                <p class="text-xs text-white/35 leading-relaxed">Убивать и воровать вещи нейтрального игрока запрещено.</p>
-              </div>
-            </div>
-            <div class="flex gap-3">
-              <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(74,222,128,0.3);">
-                <span class="text-xs font-mono text-green-400">✓</span>
-              </div>
-              <div>
-                <p class="text-sm font-medium text-white mb-1">Кражи у врагов — тактика</p>
-                <p class="text-xs text-white/35 leading-relaxed">В рамках конфликта — законно. Ослабляй противника.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Rule 3: City -->
-      <div class="rule-card py-10">
-        <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
-          <div class="flex-shrink-0">
-            <div class="flex items-center gap-4 mb-3">
-              <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 3</span>
-              <i data-lucide="map-pin" class="w-4 h-4 text-white/25"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-white lg:w-48">Мирная зона — Город</h3>
-          </div>
-          <div class="flex-1">
-            <div class="mb-5 p-4 border border-green-500/10 bg-green-500/[0.03]">
-              <p class="text-sm text-white/50">Радиус ~200 блоков от центра города — зелёная зона. Все в безопасности.</p>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="flex gap-3 items-start">
-                <span class="font-mono text-xs text-white/25 mt-0.5">—</span>
-                <p class="text-sm text-white/40">Нельзя ставить и ломать блоки</p>
-              </div>
-              <div class="flex gap-3 items-start">
-                <span class="font-mono text-xs text-white/25 mt-0.5">—</span>
-                <p class="text-sm text-white/40">Нельзя использовать взрывчатку</p>
-              </div>
-              <div class="flex gap-3 items-start">
-                <span class="font-mono text-xs text-white/25 mt-0.5">—</span>
-                <p class="text-sm text-white/40">Нельзя открывать чужие сундуки</p>
-              </div>
-              <div class="flex gap-3 items-start">
-                <span class="font-mono text-xs text-white/25 mt-0.5">—</span>
-                <p class="text-sm text-white/40">PvP полностью отключено</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Rule 4: Bases -->
-      <div class="rule-card py-10">
-        <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
-          <div class="flex-shrink-0">
-            <div class="flex items-center gap-4 mb-3">
-              <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 4</span>
-              <i data-lucide="home" class="w-4 h-4 text-white/25"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-white lg:w-48">Строительство и базы</h3>
-          </div>
-          <div class="flex-1">
-            <div class="flex flex-col sm:flex-row gap-4">
-              <div class="flex-1 p-5 border border-white/8">
-                <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Основная база</p>
-                <p class="text-2xl font-semibold text-white mb-1">1 штука</p>
-                <p class="text-sm text-white/40">До 75 × 75 блоков</p>
-              </div>
-              <div class="flex-1 p-5 border border-white/8">
-                <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Мини-базы</p>
-                <p class="text-2xl font-semibold text-white mb-1">До 3 штук</p>
-                <p class="text-sm text-white/40">До 45 × 45 блоков каждая</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Rule 5: Warehouse -->
-      <div class="rule-card py-10">
-        <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
-          <div class="flex-shrink-0">
-            <div class="flex items-center gap-4 mb-3">
-              <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 5</span>
-              <i data-lucide="package" class="w-4 h-4 text-white/25"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-white lg:w-48">Общественный склад</h3>
-          </div>
-          <div class="flex-1 space-y-4">
-            <div class="flex gap-3">
-              <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(74,222,128,0.3);">
-                <span class="text-xs font-mono text-green-400">✓</span>
-              </div>
-              <p class="text-sm text-white/40 leading-relaxed">Лимит: не больше 1 стака (64 шт.) одного типа ресурса в сутки. Можно взять 64 булыжника И 64 дерева, но нельзя 128 булыжника.</p>
-            </div>
-            <div class="flex gap-3">
-              <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
-                <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
-              </div>
-              <p class="text-sm text-white/40 leading-relaxed">Кража со склада строго запрещена. Все операции логируются — админ найдёт виновного.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Rule 6: Mods -->
-      <div class="rule-card py-10">
-        <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
-          <div class="flex-shrink-0">
-            <div class="flex items-center gap-4 mb-3">
-              <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 6</span>
-              <i data-lucide="cpu" class="w-4 h-4 text-white/25"></i>
-            </div>
-            <h3 class="text-xl font-semibold text-white lg:w-48">Модификации и клиент</h3>
-          </div>
-          <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <p class="font-mono text-xs text-red-400/60 uppercase tracking-widest mb-3">Запрещено</p>
-              <div class="space-y-2">
-                <div class="flex gap-2 items-center">
-                  <span class="font-mono text-xs" style="color:#FF6B35;">✕</span>
-                  <p class="text-sm text-white/40">X-Ray</p>
-                </div>
-                <div class="flex gap-2 items-center">
-                  <span class="font-mono text-xs" style="color:#FF6B35;">✕</span>
-                  <p class="text-sm text-white/40">Fly (полёт)</p>
-                </div>
-                <div class="flex gap-2 items-center">
-                  <span class="font-mono text-xs" style="color:#FF6B35;">✕</span>
-                  <p class="text-sm text-white/40">KillAura</p>
-                </div>
-                <div class="flex gap-2 items-center">
-                  <span class="font-mono text-xs" style="color:#FF6B35;">✕</span>
-                  <p class="text-sm text-white/40">Автострои и аналоги</p>
-                </div>
-                <div class="flex gap-2 items-center">
-                  <span class="font-mono text-xs" style="color:#FF6B35;">✕</span>
-                  <p class="text-sm text-white/40">Расширения миникарты</p>
-                </div>
-              </div>
-            </div>
-            <div>
-              <p class="font-mono text-xs text-green-400/60 uppercase tracking-widest mb-3">Разрешено</p>
-              <div class="space-y-2">
-                <div class="flex gap-2 items-center">
-                  <span class="font-mono text-xs text-green-400">✓</span>
-                  <p class="text-sm text-white/40">Xaero's Minimap (базовая версия)</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ═════════════════════════════ PUNISHMENTS ═════════════════════════════ -->
-<!-- SECTION: punishments -->
-<section id="punishments" class="py-32 lg:py-40 px-6" style="background:#0d0d0d;">
-  <div class="max-w-6xl mx-auto">
-    <div class="fade-in mb-20">
-      <span class="badge mb-6 block w-fit">Система наказаний</span>
-      <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:600px;">
-        Три нарушения — и ты вне игры
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start fade-in">
-      <!-- Steps -->
-      <div class="space-y-0">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-0">
         <!-- Step 1 -->
-        <div class="punish-step flex gap-8 py-8 border-b border-white/8">
-          <div class="flex-shrink-0 text-center">
-            <p class="font-serif text-5xl text-white/20" style="font-family:'DM Serif Display',serif;">1</p>
+        <div class="rule-card pt-10 pb-10 pr-8 fade-in">
+          <div class="flex items-start gap-4 mb-6">
+            <span class="font-mono text-xs text-white/25 mt-1">01</span>
+            <div class="w-10 h-10 flex items-center justify-center border border-white/10">
+              <i data-lucide="zap" class="w-5 h-5" style="color:#FF6B35;"></i>
+            </div>
           </div>
-          <div class="flex-1">
-            <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Первое нарушение</p>
-            <h3 class="text-xl font-semibold text-white mb-2">Предупреждение</h3>
-            <p class="text-sm text-white/40 leading-relaxed">Устно или в чат. Считай это последним шансом исправиться.</p>
-          </div>
-          <div class="flex-shrink-0 self-center">
-            <div class="w-3 h-3 bg-yellow-500/60"></div>
-          </div>
+          <h3 class="text-xl font-semibold text-white mb-3">Взорви все базы</h3>
+          <p class="text-sm text-white/40 leading-relaxed">
+            Уничтожь все 4 базы вражеской команды. Каждая должна быть полностью разрушена. Планируй атаку — не иди напролом.
+          </p>
+          <p class="font-mono text-xs text-white/20 mt-6 uppercase tracking-widest">4 базы · полное разрушение</p>
         </div>
 
         <!-- Step 2 -->
-        <div class="punish-step flex gap-8 py-8 border-b border-white/8">
-          <div class="flex-shrink-0 text-center">
-            <p class="font-serif text-5xl" style="font-family:'DM Serif Display',serif; color:rgba(255,107,53,0.5);">2</p>
+        <div class="rule-card pt-10 pb-10 px-8 fade-in" style="border-left: 1px solid rgba(255,255,255,0.08);">
+          <div class="flex items-start gap-4 mb-6">
+            <span class="font-mono text-xs text-white/25 mt-1">02</span>
+            <div class="w-10 h-10 flex items-center justify-center border border-white/10">
+              <i data-lucide="flag" class="w-5 h-5" style="color:#FF6B35;"></i>
+            </div>
           </div>
-          <div class="flex-1">
-            <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Второе нарушение</p>
-            <h3 class="text-xl font-semibold text-white mb-2">Мут или временный бан</h3>
-            <p class="text-sm text-white/40 leading-relaxed">Блокировка чата или временный бан до 1 суток. Время подумать.</p>
-          </div>
-          <div class="flex-shrink-0 self-center">
-            <div class="w-3 h-3" style="background:rgba(255,107,53,0.6);"></div>
-          </div>
+          <h3 class="text-xl font-semibold text-white mb-3">Захвати флаг</h3>
+          <p class="text-sm text-white/40 leading-relaxed">
+            Проберись на главную базу противника, забери флаг и доставь его к себе. Носителя флага будут преследовать — прикрывай его.
+          </p>
+          <p class="font-mono text-xs text-white/20 mt-6 uppercase tracking-widest">Главная база · доставка</p>
         </div>
 
         <!-- Step 3 -->
-        <div class="punish-step flex gap-8 py-8">
-          <div class="flex-shrink-0 text-center">
-            <p class="font-serif text-5xl" style="font-family:'DM Serif Display',serif; color:#FF6B35;">3</p>
+        <div class="rule-card pt-10 pb-10 pl-8 fade-in" style="border-left: 1px solid rgba(255,255,255,0.08);">
+          <div class="flex items-start gap-4 mb-6">
+            <span class="font-mono text-xs text-white/25 mt-1">03</span>
+            <div class="w-10 h-10 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.4);">
+              <i data-lucide="trophy" class="w-5 h-5" style="color:#FF6B35;"></i>
+            </div>
           </div>
-          <div class="flex-1">
-            <p class="font-mono text-xs uppercase tracking-widest mb-2" style="color:rgba(255,107,53,0.4);">Третье нарушение</p>
-            <h3 class="text-xl font-semibold text-white mb-2">Перманентный бан</h3>
-            <p class="text-sm text-white/40 leading-relaxed">Игрок отстраняется от сервера навсегда. Прецедент закрыт.</p>
-          </div>
-          <div class="flex-shrink-0 self-center">
-            <div class="w-3 h-3" style="background:#FF6B35;"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Appeal block -->
-      <div>
-        <div class="p-8 lg:p-10 border border-white/8">
-          <i data-lucide="heart" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
-          <h3 class="text-xl font-semibold text-white mb-4">Считаешь наказание несправедливым?</h3>
-          <p class="text-sm text-white/40 leading-relaxed mb-6">
-            Напиши администратору в личку. Мы всегда открыты к диалогу и пересмотру — если ты готов объясниться спокойно.
+          <h3 class="text-xl font-semibold text-white mb-3">Победа</h3>
+          <p class="text-sm text-white/40 leading-relaxed">
+            Как только флаг окажется на вашей базе — вы победители. Команда, выполнившая все три условия первой, забирает матч.
           </p>
-          <p class="text-sm text-white/40 leading-relaxed mb-8">
-            У нас небольшое и уютное комьюнити. Бан — не месть. Просто так сложились обстоятельства.
-          </p>
-          <div class="flex items-center gap-3 p-4 border border-white/8 bg-white/[0.02]">
-            <i data-lucide="at-sign" class="w-4 h-4 text-white/30"></i>
-            <span class="font-mono text-sm text-white/50">@epicwar_admin</span>
-          </div>
-        </div>
-
-        <div class="mt-6 p-6 border border-white/5 bg-white/[0.01]">
-          <p class="text-xs font-mono text-white/20 uppercase tracking-widest mb-3">Помни</p>
-          <p class="text-sm text-white/35 italic leading-relaxed">
-            "Это всего лишь игра. Соблюдай правила и получай удовольствие."
-          </p>
+          <p class="font-mono text-xs mt-6 uppercase tracking-widest" style="color:rgba(255,107,53,0.5);">Финальный этап</p>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
-<!-- ═══════════════════════════════ FAQ ═══════════════════════════════ -->
-<!-- SECTION: faq -->
-<section id="faq" class="py-32 lg:py-40 px-6" style="background:#111111;">
-  <div class="max-w-6xl mx-auto">
-    <div class="fade-in mb-20">
-      <span class="badge mb-6 block w-fit">Частые вопросы</span>
-      <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:600px;">
-        Есть вопросы?
-      </h2>
-    </div>
-
-    <div class="space-y-0 fade-in" id="faq-list">
-
-      <div class="rule-card">
-        <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
-          <span class="text-base font-medium text-white">Как начать играть на сервере?</span>
-          <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
-        </button>
-        <div class="faq-answer">
-          <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-            Запусти Minecraft Java Edition версии 1.21.1, добавь сервер с адресом <span class="font-mono text-white">play.epicwar.ru</span> и подключись. Никакой регистрации — просто заходи и играй. Прочитай правила перед входом!
-          </p>
-        </div>
-      </div>
-
-      <div class="rule-card">
-        <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
-          <span class="text-base font-medium text-white">Можно ли играть в одиночку, без команды?</span>
-          <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
-        </button>
-        <div class="faq-answer">
-          <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-            Технически — да. Но режим создан для командной игры: без союзников захватить 4 базы противника и флаг практически невозможно. Это не просто "сложно" — это суть игры. Найди команду или создай свою.
-          </p>
-        </div>
-      </div>
-
-      <div class="rule-card">
-        <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
-          <span class="text-base font-medium text-white">Что будет, если я украду у нейтрального игрока?</span>
-          <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
-        </button>
-        <div class="faq-answer">
-          <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-            Это нарушение правил 2.1 и 2.3. Ты получишь предупреждение. При повторном нарушении — мут или временный бан. Нейтральный игрок — тот, кто не участвует в конфликте между командами. Трогать его нельзя.
-          </p>
-        </div>
-      </div>
-
-      <div class="rule-card">
-        <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
-          <span class="text-base font-medium text-white">Xaero's Minimap с расширениями — можно?</span>
-          <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
-        </button>
-        <div class="faq-answer">
-          <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-            Нет. Разрешена только базовая версия Xaero's Minimap без каких-либо расширений. Любые дополнительные плагины к миникарте запрещены. При обнаружении — предупреждение и требование удалить мод.
-          </p>
-        </div>
-      </div>
-
-      <div class="rule-card">
-        <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
-          <span class="text-base font-medium text-white">Сколько можно взять ресурсов из общественного склада?</span>
-          <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
-        </button>
-        <div class="faq-answer">
-          <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-            Не более 1 стака (64 штуки) одного типа ресурса в сутки (реальные 24 часа). Разных ресурсов можно взять несколько: 64 булыжника + 64 дерева — ок. 128 булыжника — нарушение. Все операции логируются.
-          </p>
-        </div>
-      </div>
-
-      <div class="rule-card">
-        <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
-          <span class="text-base font-medium text-white">Как обжаловать бан?</span>
-          <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
-        </button>
-        <div class="faq-answer">
-          <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-            Напиши администратору напрямую: в Discord <span class="font-mono text-white">discord.gg/epicwar</span> или в Telegram <span class="font-mono text-white">@epicwar_admin</span>. Изложи ситуацию спокойно и аргументированно. Мы рассматриваем каждую апелляцию — несправедливых наказаний не бываем.
-          </p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════ JOIN / CTA ═══════════════════════════════ -->
-<!-- SECTION: join -->
-<section id="join" class="py-32 lg:py-40 px-6" style="background:#0d0d0d;">
-  <div class="max-w-4xl mx-auto text-center fade-in">
-    <span class="badge mb-8 block w-fit mx-auto">Присоединиться</span>
-
-    <h2 class="font-serif font-normal tracking-tight text-white mb-6" style="font-size: clamp(2.5rem, 7vw, 5.5rem); font-family:'DM Serif Display',serif;">
-      Готов к бою?
-    </h2>
-    <p class="text-base text-white/35 max-w-md mx-auto leading-relaxed mb-14">
-      Minecraft Java Edition 1.21.1. Подключись прямо сейчас и найди свою команду.
-    </p>
-
-    <!-- IP Block -->
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-0 max-w-xl mx-auto mb-10">
-      <div class="flex-1 w-full border border-white/15 px-6 py-4 bg-white/[0.02] flex items-center gap-3">
-        <i data-lucide="server" class="w-4 h-4 text-white/30 flex-shrink-0"></i>
-        <span id="ip-display" class="text-white text-sm flex-1 text-left">play.epicwar.ru</span>
-      </div>
-      <button id="copy-ip-btn" onclick="copyIP()" class="w-full sm:w-auto bg-white text-black px-7 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 border border-white/15 border-l-0 flex items-center justify-center gap-2">
-        <i data-lucide="copy" class="w-4 h-4"></i>
-        <span id="copy-label">Копировать</span>
-      </button>
-    </div>
-
-    <div class="flex flex-col sm:flex-row justify-center gap-4">
-      <a href="https://discord.gg/epicwar" target="_blank" class="border border-white/15 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-colors duration-300 flex items-center justify-center gap-2">
-        <i data-lucide="message-circle" class="w-4 h-4"></i>
-        Discord сервер
-      </a>
-      <a href="#rules" class="border border-white/8 text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-colors duration-300 flex items-center justify-center gap-2">
-        <i data-lucide="book-open" class="w-4 h-4"></i>
-        Читать правила
-      </a>
-    </div>
-
-    <p class="mt-12 font-mono text-xs text-white/15 uppercase tracking-widest">Версия 1.21.1 · Java Edition · Без платного доступа</p>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
-<script>
-  // Init Lucide icons
-  lucide.createIcons();
-
-  // Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-    anchor.addEventListener('click', function(e) {
-      var target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
-
-  // FAQ Accordion
-  document.querySelectorAll('.faq-trigger').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var card = this.closest('.rule-card') || this.parentElement;
-      var answer = card.querySelector('.faq-answer');
-      var icon = card.querySelector('.faq-icon');
-
-      var isOpen = answer.classList.contains('open');
-
-      // Close all
-      document.querySelectorAll('.faq-answer').forEach(function(a) { a.classList.remove('open'); });
-      document.querySelectorAll('.faq-icon').forEach(function(i) { i.classList.remove('rotated'); });
-
-      if (!isOpen) {
-        answer.classList.add('open');
-        if (icon) icon.classList.add('rotated');
-      }
-    });
-  });
-
-  // Copy IP
-  function copyIP() {
-    var ip = 'play.epicwar.ru';
-    var label = document.getElementById('copy-label');
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(ip).then(function() {
-        label.textContent = 'Скопировано!';
-        setTimeout(function() { label.textContent = 'Копировать'; }, 2000);
-      });
-    } else {
-      var el = document.createElement('textarea');
-      el.value = ip;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand('copy');
-      document.body.removeChild(el);
-      label.textContent = 'Скопировано!';
-      setTimeout(function() { label.textContent = 'Копировать'; }, 2000);
-    }
-  }
-
-  // Footer year
-  var fyEl = document.getElementById('footer-year');
-  if (fyEl) fyEl.textContent = new Date().getFullYear();
-</script>
-  <footer class="border-t border-white/8 bg-[#0d0d0d]" style="border-top:1px solid rgba(255,255,255,0.08);">
-  <div class="max-w-6xl mx-auto px-6 lg:px-8 py-16">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-      <!-- Brand -->
-      <div>
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-9 h-9 flex items-center justify-center" style="background:#FF6B35;">
-            <span class="text-white font-bold text-sm font-mono">EW</span>
-          </div>
-          <span class="text-white font-bold tracking-widest text-sm uppercase font-mono">EpicWar</span>
-        </div>
-        <p class="text-sm text-white/40 leading-relaxed max-w-xs">
-          Тактическая командная игра. Взрывай базы, захватывай флаги, побеждай.
+  <!-- TEAMWORK -->
+  <section id="teamwork" class="py-32 lg:py-40 px-6" style="background:#0d0d0d;">
+    <div class="max-w-6xl mx-auto">
+      <div class="fade-in mb-20 text-center">
+        <span class="badge mb-6 block w-fit mx-auto">Командная игра</span>
+        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif;">
+          Одиночкам здесь не выжить
+        </h2>
+        <p class="mt-5 text-white/35 text-base max-w-xl mx-auto leading-relaxed">
+          Только сплочённая команда, где каждый знает свою роль, сможет одержать победу.
         </p>
-        <p class="font-mono text-xs text-white/25 mt-4">Версия 1.21.1</p>
       </div>
 
-      <!-- Nav -->
-      <div>
-        <p class="text-xs uppercase tracking-widest text-white/30 mb-5 font-mono">Навигация</p>
-        <nav class="flex flex-col gap-3">
-          <a href="#goal" class="text-sm text-white/50 hover:text-white transition-colors">Цель игры</a>
-          <a href="#teamwork" class="text-sm text-white/50 hover:text-white transition-colors">Командная игра</a>
-          <a href="#rules" class="text-sm text-white/50 hover:text-white transition-colors">Правила</a>
-          <a href="#punishments" class="text-sm text-white/50 hover:text-white transition-colors">Наказания</a>
-          <a href="#faq" class="text-sm text-white/50 hover:text-white transition-colors">FAQ</a>
-          <a href="#join" class="text-sm text-white/50 hover:text-white transition-colors">Присоединиться</a>
-        </nav>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-white/8 fade-in">
+        <div class="p-8 lg:p-10 border-b sm:border-b-0 border-white/8 sm:border-r hover:bg-white/[0.02] transition-colors duration-300">
+          <i data-lucide="trending-up" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
+          <h3 class="text-base font-semibold text-white mb-3">Развиваться</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Добывайте ресурсы, крафтите броню и оружие. Чем сильнее команда — тем ближе победа.</p>
+        </div>
+        <div class="p-8 lg:p-10 border-b sm:border-b-0 border-white/8 lg:border-r hover:bg-white/[0.02] transition-colors duration-300">
+          <i data-lucide="shield" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
+          <h3 class="text-base font-semibold text-white mb-3">Защищать базу</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Не давайте разрушить ваши базы. Стройте укрепления, ставьте ловушки, охраняйте флаг.</p>
+        </div>
+        <div class="p-8 lg:p-10 border-b lg:border-b-0 border-white/8 sm:border-r hover:bg-white/[0.02] transition-colors duration-300">
+          <i data-lucide="users" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
+          <h3 class="text-base font-semibold text-white mb-3">Распределять роли</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Разведка, защита тыла, тяжёлая атака. Договаривайтесь и действуйте как единый механизм.</p>
+        </div>
+        <div class="p-8 lg:p-10 hover:bg-white/[0.02] transition-colors duration-300">
+          <i data-lucide="crosshair" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
+          <h3 class="text-base font-semibold text-white mb-3">Стратегия</h3>
+          <p class="text-sm text-white/40 leading-relaxed">Воруй ресурсы врага — это легально. Ослабляй противника, прежде чем идти на финальный штурм.</p>
+        </div>
       </div>
 
-      <!-- Contacts -->
-      <div>
-        <p class="text-xs uppercase tracking-widest text-white/30 mb-5 font-mono">Контакты</p>
-        <div class="flex flex-col gap-3">
-          <p class="text-sm text-white/50">IP: <span class="font-mono text-white">play.epicwar.ru</span></p>
-          <p class="text-sm text-white/50">Discord: <span class="text-white">discord.gg/epicwar</span></p>
-          <p class="text-sm text-white/50">Админ: <span class="text-white">@epicwar_admin</span></p>
+      <!-- Important note -->
+      <div class="mt-12 p-8 border border-white/8 fade-in">
+        <div class="flex flex-col sm:flex-row gap-6 items-start">
+          <i data-lucide="info" class="w-5 h-5 text-white/30 mt-0.5 flex-shrink-0"></i>
+          <div>
+            <p class="text-sm text-white/50 leading-relaxed">
+              <span class="text-white font-medium">Важно:</span> Игра идёт до тех пор, пока одна из команд не выполнит все условия победы. Воровать ресурсы у врага в рамках конфликта — <span style="color:#FF6B35;">нормальная тактика</span>. Носитель флага должен быть прикрыт командой — враги будут охотиться за ним.
+            </p>
+          </div>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
-      <p class="text-xs text-white/20 font-mono">© 2024–<span id="footer-year"></span> EpicWar. Все права защищены.</p>
-      <p class="text-xs text-white/20 font-mono">Minecraft 1.21.1 · Java Edition</p>
+  <!-- RULES -->
+  <section id="rules" class="py-32 lg:py-40 px-6" style="background:#111111;">
+    <div class="max-w-6xl mx-auto">
+      <div class="fade-in mb-20">
+        <span class="badge mb-6 block w-fit">Правила сервера</span>
+        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:650px;">
+          Обязательно к прочтению
+        </h2>
+        <p class="mt-5 text-white/35 text-base max-w-xl leading-relaxed">
+          Нарушения фиксируются. 3 предупреждения — перманентный бан. Мы небольшая команда, поэтому каждый игрок на виду.
+        </p>
+      </div>
+
+      <div class="space-y-0 fade-in">
+        <!-- Rule 1: Chat -->
+        <div class="rule-card py-10">
+          <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
+            <div class="flex-shrink-0">
+              <div class="flex items-center gap-4 mb-3">
+                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 1</span>
+                <i data-lucide="message-square" class="w-4 h-4 text-white/25"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-white lg:w-48">Общение и культура в чате</h3>
+            </div>
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div class="flex gap-3">
+                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
+                  <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-white mb-1">Мат запрещён</p>
+                  <p class="text-xs text-white/35 leading-relaxed">В любом виде, включая замену букв символами.</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
+                  <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-white mb-1">Оскорбления</p>
+                  <p class="text-xs text-white/35 leading-relaxed">У нас дружелюбное сообщество. Без токсика.</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(239,68,68,0.4);">
+                  <span class="text-xs font-mono text-red-400">!!!</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-white mb-1">Реклама = мгновенный бан</p>
+                  <p class="text-xs text-white/35 leading-relaxed">Любые сторонние серверы, ресурсы, проекты.</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
+                  <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-white mb-1">Спам и флуд</p>
+                  <p class="text-xs text-white/35 leading-relaxed">Это мешает общению всей команды.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule 2: PvP -->
+        <div class="rule-card py-10">
+          <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
+            <div class="flex-shrink-0">
+              <div class="flex items-center gap-4 mb-3">
+                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 2</span>
+                <i data-lucide="sword" class="w-4 h-4 text-white/25"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-white lg:w-48">PvP и взаимодействие</h3>
+            </div>
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div class="flex gap-3">
+                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
+                  <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-white mb-1">Нейтральный игрок — неприкосновенен</p>
+                  <p class="text-xs text-white/35 leading-relaxed">Убивать и воровать вещи нейтрального игрока запрещено.</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(74,222,128,0.3);">
+                  <span class="text-xs font-mono text-green-400">✓</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-white mb-1">Кражи у врагов — тактика</p>
+                  <p class="text-xs text-white/35 leading-relaxed">В рамках конфликта — законно. Ослабляй противника.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule 3: City -->
+        <div class="rule-card py-10">
+          <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
+            <div class="flex-shrink-0">
+              <div class="flex items-center gap-4 mb-3">
+                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 3</span>
+                <i data-lucide="map-pin" class="w-4 h-4 text-white/25"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-white lg:w-48">Мирная зона — Город</h3>
+            </div>
+            <div class="flex-1">
+              <div class="mb-5 p-4 border border-green-500/10 bg-green-500/[0.03]">
+                <p class="text-sm text-white/50">Радиус ~200 блоков от центра города — зелёная зона. Все в безопасности.</p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex gap-3 items-start"><span class="font-mono text-xs text-white/25 mt-0.5">—</span><p class="text-sm text-white/40">Нельзя ставить и ломать блоки</p></div>
+                <div class="flex gap-3 items-start"><span class="font-mono text-xs text-white/25 mt-0.5">—</span><p class="text-sm text-white/40">Нельзя использовать взрывчатку</p></div>
+                <div class="flex gap-3 items-start"><span class="font-mono text-xs text-white/25 mt-0.5">—</span><p class="text-sm text-white/40">Нельзя открывать чужие сундуки</p></div>
+                <div class="flex gap-3 items-start"><span class="font-mono text-xs text-white/25 mt-0.5">—</span><p class="text-sm text-white/40">PvP полностью отключено</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule 4: Bases -->
+        <div class="rule-card py-10">
+          <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
+            <div class="flex-shrink-0">
+              <div class="flex items-center gap-4 mb-3">
+                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 4</span>
+                <i data-lucide="home" class="w-4 h-4 text-white/25"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-white lg:w-48">Строительство и базы</h3>
+            </div>
+            <div class="flex-1">
+              <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1 p-5 border border-white/8">
+                  <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Основная база</p>
+                  <p class="text-2xl font-semibold text-white mb-1">1 штука</p>
+                  <p class="text-sm text-white/40">До 75 × 75 блоков</p>
+                </div>
+                <div class="flex-1 p-5 border border-white/8">
+                  <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Мини-базы</p>
+                  <p class="text-2xl font-semibold text-white mb-1">До 3 штук</p>
+                  <p class="text-sm text-white/40">До 45 × 45 блоков каждая</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule 5: Warehouse -->
+        <div class="rule-card py-10">
+          <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
+            <div class="flex-shrink-0">
+              <div class="flex items-center gap-4 mb-3">
+                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 5</span>
+                <i data-lucide="package" class="w-4 h-4 text-white/25"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-white lg:w-48">Общественный склад</h3>
+            </div>
+            <div class="flex-1 space-y-4">
+              <div class="flex gap-3">
+                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(74,222,128,0.3);"><span class="text-xs font-mono text-green-400">✓</span></div>
+                <p class="text-sm text-white/40 leading-relaxed">Лимит: не больше 1 стака (64 шт.) одного типа ресурса в сутки. Можно взять 64 булыжника И 64 дерева, но нельзя 128 булыжника.</p>
+              </div>
+              <div class="flex gap-3">
+                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);"><span class="text-xs font-mono" style="color:#FF6B35;">✕</span></div>
+                <p class="text-sm text-white/40 leading-relaxed">Кража со склада строго запрещена. Все операции логируются — админ найдёт виновного.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule 6: Mods -->
+        <div class="rule-card py-10">
+          <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
+            <div class="flex-shrink-0">
+              <div class="flex items-center gap-4 mb-3">
+                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 6</span>
+                <i data-lucide="cpu" class="w-4 h-4 text-white/25"></i>
+              </div>
+              <h3 class="text-xl font-semibold text-white lg:w-48">Модификации и клиент</h3>
+            </div>
+            <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <p class="font-mono text-xs text-red-400/60 uppercase tracking-widest mb-3">Запрещено</p>
+                <div class="space-y-2">
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">X-Ray</p></div>
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">Fly (полёт)</p></div>
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">KillAura</p></div>
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">Автострои и аналоги</p></div>
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">Расширения миникарты</p></div>
+                </div>
+              </div>
+              <div>
+                <p class="font-mono text-xs text-green-400/60 uppercase tracking-widest mb-3">Разрешено</p>
+                <div class="space-y-2">
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs text-green-400">✓</span><p class="text-sm text-white/40">Xaero's Minimap (базовая версия)</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</footer>
+  </section>
+
+  <!-- PUNISHMENTS -->
+  <section id="punishments" class="py-32 lg:py-40 px-6" style="background:#0d0d0d;">
+    <div class="max-w-6xl mx-auto">
+      <div class="fade-in mb-20">
+        <span class="badge mb-6 block w-fit">Система наказаний</span>
+        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:600px;">
+          Три нарушения — и ты вне игры
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start fade-in">
+        <!-- Steps -->
+        <div class="space-y-0">
+          <div class="punish-step flex gap-8 py-8 border-b border-white/8">
+            <div class="flex-shrink-0 text-center"><p class="font-serif text-5xl text-white/20" style="font-family:'DM Serif Display',serif;">1</p></div>
+            <div class="flex-1"><p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Первое нарушение</p><h3 class="text-xl font-semibold text-white mb-2">Предупреждение</h3><p class="text-sm text-white/40 leading-relaxed">Устно или в чат. Считай это последним шансом исправиться.</p></div>
+            <div class="flex-shrink-0 self-center"><div class="w-3 h-3 bg-yellow-500/60"></div></div>
+          </div>
+          <div class="punish-step flex gap-8 py-8 border-b border-white/8">
+            <div class="flex-shrink-0 text-center"><p class="font-serif text-5xl" style="font-family:'DM Serif Display',serif; color:rgba(255,107,53,0.5);">2</p></div>
+            <div class="flex-1"><p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Второе нарушение</p><h3 class="text-xl font-semibold text-white mb-2">Мут или временный бан</h3><p class="text-sm text-white/40 leading-relaxed">Блокировка чата или временный бан до 1 суток. Время подумать.</p></div>
+            <div class="flex-shrink-0 self-center"><div class="w-3 h-3" style="background:rgba(255,107,53,0.6);"></div></div>
+          </div>
+          <div class="punish-step flex gap-8 py-8">
+            <div class="flex-shrink-0 text-center"><p class="font-serif text-5xl" style="font-family:'DM Serif Display',serif; color:#FF6B35;">3</p></div>
+            <div class="flex-1"><p class="font-mono text-xs uppercase tracking-widest mb-2" style="color:rgba(255,107,53,0.4);">Третье нарушение</p><h3 class="text-xl font-semibold text-white mb-2">Перманентный бан</h3><p class="text-sm text-white/40 leading-relaxed">Игрок отстраняется от сервера навсегда. Прецедент закрыт.</p></div>
+            <div class="flex-shrink-0 self-center"><div class="w-3 h-3" style="background:#FF6B35;"></div></div>
+          </div>
+        </div>
+
+        <!-- Appeal block -->
+        <div>
+          <div class="p-8 lg:p-10 border border-white/8">
+            <i data-lucide="heart" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
+            <h3 class="text-xl font-semibold text-white mb-4">Считаешь наказание несправедливым?</h3>
+            <p class="text-sm text-white/40 leading-relaxed mb-6">
+              Напиши администратору в личку. Мы всегда открыты к диалогу и пересмотру — если ты готов объясниться спокойно.
+            </p>
+            <p class="text-sm text-white/40 leading-relaxed mb-8">
+              У нас небольшое и уютное комьюнити. Бан — не месть. Просто так сложились обстоятельства.
+            </p>
+            <div class="flex items-center gap-3 p-4 border border-white/8 bg-white/[0.02]">
+              <i data-lucide="at-sign" class="w-4 h-4 text-white/30"></i>
+              <span class="font-mono text-sm text-white/50">[ADMIN_CONTACT]</span>
+            </div>
+          </div>
+          <div class="mt-6 p-6 border border-white/5 bg-white/[0.01]">
+            <p class="text-xs font-mono text-white/20 uppercase tracking-widest mb-3">Помни</p>
+            <p class="text-sm text-white/35 italic leading-relaxed">"Это всего лишь игра. Соблюдай правила и получай удовольствие."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-32 lg:py-40 px-6" style="background:#111111;">
+    <div class="max-w-6xl mx-auto">
+      <div class="fade-in mb-20">
+        <span class="badge mb-6 block w-fit">Частые вопросы</span>
+        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:600px;">
+          Есть вопросы?
+        </h2>
+      </div>
+
+      <div class="space-y-0 fade-in" id="faq-list">
+        <div class="rule-card">
+          <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
+            <span class="text-base font-medium text-white">Как начать играть на сервере?</span>
+            <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
+              Запусти Minecraft Java Edition версии 1.21.1, добавь сервер с адресом <span class="font-mono text-white">[SERVER_IP]</span> и подключись. Никакой регистрации — просто заходи и играй. Прочитай правила перед входом!
+            </p>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
+            <span class="text-base font-medium text-white">Можно ли играть в одиночку, без команды?</span>
+            <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
+              Технически — да. Но режим создан для командной игры: без союзников захватить 4 базы противника и флаг практически невозможно. Найди команду или создай свою.
+            </p>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
+            <span class="text-base font-medium text-white">Что будет, если я украду у нейтрального игрока?</span>
+            <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
+              Это нарушение правил 2.1 и 2.3. Ты получишь предупреждение. При повторном нарушении — мут или временный бан. Нейтральный игрок — тот, кто не участвует в конфликте между командами. Трогать его нельзя.
+            </p>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
+            <span class="text-base font-medium text-white">Xaero's Minimap с расширениями — можно?</span>
+            <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
+              Нет. Разрешена только базовая версия Xaero's Minimap без каких-либо расширений. При обнаружении — предупреждение и требование удалить мод.
+            </p>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
+            <span class="text-base font-medium text-white">Сколько можно взять ресурсов из общественного склада?</span>
+            <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
+              Не более 1 стака (64 штуки) одного типа ресурса в сутки. Разных ресурсов можно взять несколько. Все операции логируются.
+            </p>
+          </div>
+        </div>
+
+        <div class="rule-card">
+          <button class="w-full flex items-center justify-between py-7 text-left gap-4 faq-trigger">
+            <span class="text-base font-medium text-white">Как обжаловать бан?</span>
+            <i data-lucide="plus" class="w-5 h-5 text-white/30 flex-shrink-0 faq-icon"></i>
+          </button>
+          <div class="faq-answer">
+            <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
+              Напиши администратору напрямую: в Discord <span class="font-mono text-white">[DISCORD_LINK]</span> или в Telegram <span class="font-mono text-white">[ADMIN_CONTACT]</span>. Изложи ситуацию спокойно.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN / CTA -->
+  <section id="join" class="py-32 lg:py-40 px-6" style="background:#0d0d0d;">
+    <div class="max-w-4xl mx-auto text-center fade-in">
+      <span class="badge mb-8 block w-fit mx-auto">Присоединиться</span>
+      <h2 class="font-serif font-normal tracking-tight text-white mb-6" style="font-size: clamp(2.5rem, 7vw, 5.5rem); font-family:'DM Serif Display',serif;">
+        Готов к бою?
+      </h2>
+      <p class="text-base text-white/35 max-w-md mx-auto leading-relaxed mb-14">
+        Minecraft Java Edition 1.21.1. Подключись прямо сейчас и найди свою команду.
+      </p>
+
+      <!-- IP Block -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-0 max-w-xl mx-auto mb-10">
+        <div class="flex-1 w-full border border-white/15 px-6 py-4 bg-white/[0.02] flex items-center gap-3">
+          <i data-lucide="server" class="w-4 h-4 text-white/30 flex-shrink-0"></i>
+          <span id="ip-display" class="text-white text-sm flex-1 text-left">[SERVER_IP]</span>
+        </div>
+        <button id="copy-ip-btn" onclick="copyIP()" class="w-full sm:w-auto bg-white text-black px-7 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 border border-white/15 border-l-0 flex items-center justify-center gap-2">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span id="copy-label">Копировать</span>
+        </button>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <a href="[DISCORD_LINK]" target="_blank" class="border border-white/15 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-colors duration-300 flex items-center justify-center gap-2">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          Discord сервер
+        </a>
+        <a href="#rules" class="border border-white/8 text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-colors duration-300 flex items-center justify-center gap-2">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          Читать правила
+        </a>
+      </div>
+
+      <p class="mt-12 font-mono text-xs text-white/15 uppercase tracking-widest">Версия 1.21.1 · Java Edition · Без платного доступа</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-white/8 bg-[#0d0d0d]">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <!-- Brand -->
+        <div>
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 flex items-center justify-center" style="background:#FF6B35;">
+              <span class="text-white font-bold text-sm font-mono">[ЛОГО]</span>
+            </div>
+            <span class="text-white font-bold tracking-widest text-sm uppercase font-mono">[SERVER_NAME]</span>
+          </div>
+          <p class="text-sm text-white/40 leading-relaxed max-w-xs">
+            Тактическая командная игра. Взрывай базы, захватывай флаги, побеждай.
+          </p>
+          <p class="font-mono text-xs text-white/25 mt-4">Версия 1.21.1</p>
+        </div>
+
+        <!-- Nav -->
+        <div>
+          <p class="text-xs uppercase tracking-widest text-white/30 mb-5 font-mono">Навигация</p>
+          <nav class="flex flex-col gap-3">
+            <a href="#goal" class="text-sm text-white/50 hover:text-white transition-colors">Цель игры</a>
+            <a href="#teamwork" class="text-sm text-white/50 hover:text-white transition-colors">Командная игра</a>
+            <a href="#rules" class="text-sm text-white/50 hover:text-white transition-colors">Правила</a>
+            <a href="#punishments" class="text-sm text-white/50 hover:text-white transition-colors">Наказания</a>
+            <a href="#faq" class="text-sm text-white/50 hover:text-white transition-colors">FAQ</a>
+            <a href="#join" class="text-sm text-white/50 hover:text-white transition-colors">Присоединиться</a>
+          </nav>
+        </div>
+
+        <!-- Contacts -->
+        <div>
+          <p class="text-xs uppercase tracking-widest text-white/30 mb-5 font-mono">Контакты</p>
+          <div class="flex flex-col gap-3">
+            <p class="text-sm text-white/50">IP: <span class="font-mono text-white">[SERVER_IP]</span></p>
+            <p class="text-sm text-white/50">Discord: <span class="text-white">[DISCORD_LINK]</span></p>
+            <p class="text-sm text-white/50">Админ: <span class="text-white">[ADMIN_CONTACT]</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <p class="text-xs text-white/20 font-mono">© 2024–<span id="footer-year"></span> [SERVER_NAME]. Все права защищены.</p>
+        <p class="text-xs text-white/20 font-mono">Minecraft 1.21.1 · Java Edition</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
   <script>
-(function(){
-  var attrs=['data-target','data-count','data-value','data-end'];
-  var els=[];
-  attrs.forEach(function(a){
-    document.querySelectorAll('['+a+']').forEach(function(el){
-      if(els.indexOf(el)===-1)els.push(el);
+    // Инициализация иконок
+    lucide.createIcons();
+
+    // Плавный скролл к якорям
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
     });
-  });
-  if(!els.length)return;
-  function getTarget(el){
-    for(var i=0;i<attrs.length;i++){
-      var v=el.getAttribute(attrs[i]);
-      if(v)return parseInt(v.replace(/\s/g,''),10)||0;
+
+    // Мобильное меню
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+      mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+      });
+      document.addEventListener('click', (e) => {
+        if (!mobileMenu.classList.contains('hidden') && !menuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
+          mobileMenu.classList.add('hidden');
+        }
+      });
     }
-    return 0;
-  }
-  function animate(el){
-    if(el._wvCounted)return;
-    el._wvCounted=true;
-    var target=getTarget(el);
-    if(!target)return;
-    var cur=parseInt(el.textContent.replace(/[^0-9]/g,''),10)||0;
-    if(cur>0)return;
-    var raw=el.textContent||'';
-    var suffix=raw.replace(/[0-9\s]/g,'').trim();
-    var duration=1800;var t0=performance.now();
-    function step(now){
-      var p=Math.min((now-t0)/duration,1);
-      p=1-Math.pow(1-p,3);
-      el.textContent=Math.floor(target*p)+(suffix||'');
-      if(p<1)requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-  if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(e){if(e.isIntersecting){animate(e.target);io.unobserve(e.target)}});
-    },{threshold:0.2});
-    els.forEach(function(el){io.observe(el)});
-  }else{
-    els.forEach(animate);
-  }
-})();
-</script>
-  <script>
-(function(){
-  if(window._wvLightbox)return;
-  window._wvLightbox=true;
-  var items=document.querySelectorAll('[data-src]');
-  var lbIds=['doc-lightbox','lightbox','image-lightbox','gallery-lightbox','portfolio-lightbox','photo-lightbox','cert-lightbox'];
-  var lb,lbImg,lbCap;
-  for(var k=0;k<lbIds.length;k++){lb=document.getElementById(lbIds[k]);if(lb)break;}
-  if(lb){
-    lbImg=lb.querySelector('img[id*="lb-img"],img[id*="lightbox-img"]');
-    lbCap=lb.querySelector('[id*="lb-caption"],[id*="lightbox-caption"]');
-    if(!lbImg)lbImg=lb.querySelector('img');
-    if(!lbCap)lbCap=lb.querySelector('p');
-  }
-  if(!lb&&!items.length)return;
-  if(!lb){
-    lb=document.createElement('div');lb.id='doc-lightbox';
-    lb.style.cssText='display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);align-items:center;justify-content:center;flex-direction:column;cursor:pointer;';
-    lb.innerHTML='<button id="wv-lb-close" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10001;"><svg width=22 height=22 viewBox="0 0 24 24" fill=none stroke=white stroke-width=2.5 stroke-linecap=round><line x1=18 y1=6 x2=6 y2=18/><line x1=6 y1=6 x2=18 y2=18/></svg></button><div style="max-width:90vw;max-height:85vh;display:flex;flex-direction:column;align-items:center;gap:16px;" onclick="event.stopPropagation()"><img id="lightbox-img" src="" alt="" style="max-width:100%;max-height:78vh;object-fit:contain;border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,0.7);"><p id="lightbox-caption" style="color:rgba(255,255,255,0.75);font-size:14px;text-align:center;max-width:600px;line-height:1.5;"></p></div>';
-    document.body.appendChild(lb);
-    lbImg=document.getElementById('lightbox-img');
-    lbCap=document.getElementById('lightbox-caption');
-  }
-  function resolveSrc(item){
-    var ds=item.getAttribute('data-src')||'';
-    var img=item.querySelector('img');
-    if(img&&img.src){
-      var iSrc=img.src;
-      var isUnsplash=ds.indexOf('unsplash.com')!==-1;
-      var imgIsCustom=iSrc.indexOf('/api/site-images/')!==-1||iSrc.indexOf('/site-images/')!==-1;
-      if(isUnsplash&&imgIsCustom)return iSrc;
-      if(img.src&&!ds)return iSrc;
-    }
-    return ds;
-  }
-  function openLb(src,cap){
-    if(lbImg)lbImg.src=src;
-    if(lbCap)lbCap.textContent=cap||'';
-    lb.style.display='flex';
-    document.body.style.overflow='hidden';
-  }
-  function closeLb(){
-    lb.style.display='none';
-    document.body.style.overflow='';
-    if(lbImg)lbImg.src='';
-  }
-  window.closeLightbox=function(e){if(e&&e.target===lb)closeLb()};
-  window.closeLightboxBtn=closeLb;
-  window.closeGalleryLightbox=function(e){if(!e||e.target===lb)closeLb()};
-  window.closeGalleryLightboxBtn=closeLb;
-  window.openGalleryLightbox=function(src,cap){try{var w=event&&event.currentTarget;if(w){var ci=w.querySelector('img');if(ci&&ci.src&&ci.src!==src)src=ci.src;}}catch(e){}openLb(src,cap)};
-  window.openLightbox=function(src,cap){try{var w=event&&event.currentTarget;if(w){var ci=w.querySelector('img');if(ci&&ci.src&&ci.src!==src)src=ci.src;}}catch(e){}openLb(src,cap)};
-  lb.addEventListener('click',function(e){if(e.target===lb)closeLb()});
-  var cb=lb.querySelector('button')||document.getElementById('wv-lb-close');
-  if(cb)cb.addEventListener('click',closeLb);
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.style.display==='flex')closeLb()});
-  items.forEach(function(item){
-    if(item._wvLb)return;item._wvLb=true;
-    item.style.cursor='pointer';
-    item.addEventListener('click',function(){openLb(resolveSrc(item),item.getAttribute('data-caption'))});
-  });
-})();
-</script>
-  <script>
-(function(){
-  var trackIds=['carousel-track','gallery-track','portfolio-track','slider-track','photo-track','cert-track','doc-track'];
-  var track;
-  for(var k=0;k<trackIds.length;k++){track=document.getElementById(trackIds[k]);if(track)break;}
-  if(!track||track._wvCar)return;
-  track._wvCar=true;
-  var prefix=track.id.replace('-track','');
-  var prev=document.getElementById(prefix+'-prev')||document.getElementById('carousel-prev');
-  var next=document.getElementById(prefix+'-next')||document.getElementById('carousel-next');
-  var dots=document.getElementById(prefix+'-dots')||document.getElementById('carousel-dots');
-  var items=Array.prototype.slice.call(track.children);
-  if(!items.length)return;
-  var idx=0;
-  track.style.transition=track.style.transition||'transform 0.5s ease-in-out';
-  var anc=track.parentElement;
-  while(anc&&anc.tagName!=='SECTION'&&anc.tagName!=='BODY'){
-    anc.style.maxWidth='100%';anc.style.overflow='hidden';
-    anc=anc.parentElement;
-  }
-  function gap(){return parseFloat(getComputedStyle(track).gap)||0}
-  function itemW(){var w=items[0].offsetWidth;return w?(w+gap()):200}
-  function visible(){return Math.max(1,Math.floor(track.parentElement.offsetWidth/itemW()))}
-  function maxIdx(){return Math.max(0,items.length-visible())}
-  function go(i){
-    idx=Math.max(0,Math.min(i,maxIdx()));
-    track.style.transform='translateX(-'+idx*itemW()+'px)';
-    if(dots){
-      var dd=dots.querySelectorAll('button');
-      dd.forEach(function(d,j){d.style.background=j===idx?'#3b82f6':'#d1d5db'});
-    }
-    if(prev)prev.style.opacity=idx<=0?'0.4':'1';
-    if(next)next.style.opacity=idx>=maxIdx()?'0.4':'1';
-  }
-  if(prev)prev.addEventListener('click',function(){go(idx-1)});
-  if(next)next.addEventListener('click',function(){go(idx+1)});
-  if(dots&&!dots.children.length){
-    var m=maxIdx()+1;
-    for(var i=0;i<m;i++){
-      var b=document.createElement('button');
-      b.style.cssText='width:8px;height:8px;border-radius:50%;border:none;padding:0;cursor:pointer;transition:background 0.2s;background:'+(i===0?'#3b82f6':'#d1d5db');
-      (function(j){b.addEventListener('click',function(){go(j)})})(i);
-      dots.appendChild(b);
-    }
-  }
-  var tx=0;
-  track.addEventListener('touchstart',function(e){tx=e.touches[0].clientX},{passive:true});
-  track.addEventListener('touchend',function(e){
-    var dx=e.changedTouches[0].clientX-tx;
-    if(Math.abs(dx)>40)go(idx+(dx<0?1:-1));
-  },{passive:true});
-  var mx=0,dragging=false;
-  track.parentElement.style.cursor='grab';
-  track.parentElement.addEventListener('mousedown',function(e){mx=e.clientX;dragging=true;track.parentElement.style.cursor='grabbing';track.style.transition='none';e.preventDefault()});
-  document.addEventListener('mousemove',function(e){if(!dragging)return;var dx=e.clientX-mx;track.style.transform='translateX('+(-idx*itemW()+dx)+'px)'});
-  document.addEventListener('mouseup',function(e){if(!dragging)return;dragging=false;track.parentElement.style.cursor='grab';track.style.transition='transform 0.5s ease-in-out';var dx=e.clientX-mx;if(Math.abs(dx)>40)go(idx+(dx<0?1:-1));else go(idx)});
-  window.addEventListener('resize',function(){go(idx)});
-  go(0);
-})();
-</script>
-  <script>
-(function(){
-  if(window._wvFaq)return;
-  var triggers=document.querySelectorAll('.faq-trigger,.faq-question');
-  if(!triggers.length)return;
-  window._wvFaq=true;
-  // Clone triggers to strip ALL prior event listeners and inline onclick
-  triggers.forEach(function(btn){
-    btn.removeAttribute('onclick');
-    var clone=btn.cloneNode(true);
-    btn.parentNode.replaceChild(clone,btn);
-  });
-  // Re-query after cloning
-  triggers=document.querySelectorAll('.faq-trigger,.faq-question');
-  // Detect if CSS handles visibility via display:none + .open class
-  var testAns=document.querySelector('.faq-answer,.faq-content');
-  var useCss=false;
-  if(testAns){
-    var cs=window.getComputedStyle(testAns);
-    if(cs.display==='none')useCss=true;
-  }
-  triggers.forEach(function(btn){
-    var item=btn.closest('.faq-item')||btn.parentElement;
-    var answer=item.querySelector('.faq-answer,.faq-content');
-    if(!answer)return;
-    if(!useCss&&!answer._wvInit){
-      answer._wvInit=true;
-      answer.style.maxHeight='0';
-      answer.style.overflow='hidden';
-      answer.style.transition='max-height 0.3s ease';
-    }
-    btn.addEventListener('click',function(e){
-      if(useCss){
-        var isOpen=answer.classList.contains('open');
-        triggers.forEach(function(t){
-          var it=t.closest('.faq-item')||t.parentElement;
-          var a=it.querySelector('.faq-answer,.faq-content');
-          if(a)a.classList.remove('open');
-          var ic=t.querySelector('.faq-icon,svg.lucide-chevron-down');
-          if(ic){ic.style.transition='transform 0.3s ease';ic.style.transform='rotate(0deg)';}
-        });
-        if(!isOpen){
+
+    // Шапка при скролле
+    const header = document.getElementById('main-header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+    });
+
+    // FAQ аккордеон
+    document.querySelectorAll('.faq-trigger').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const card = this.closest('.rule-card');
+        const answer = card.querySelector('.faq-answer');
+        const icon = card.querySelector('.faq-icon');
+        const isOpen = answer.classList.contains('open');
+        document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+        document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('rotated'));
+        if (!isOpen) {
           answer.classList.add('open');
-          var icon=btn.querySelector('.faq-icon,svg.lucide-chevron-down');
-          if(icon){icon.style.transition='transform 0.3s ease';icon.style.transform='rotate(180deg)';}
+          if (icon) icon.classList.add('rotated');
         }
-      }else{
-        var open=answer.style.maxHeight!=='0px'&&answer.style.maxHeight!=='0';
-        triggers.forEach(function(t){
-          var it=t.closest('.faq-item')||t.parentElement;
-          var a=it.querySelector('.faq-answer,.faq-content');
-          if(a)a.style.maxHeight='0';
-          it.classList.remove('active');
-          var ic=t.querySelector('.faq-icon,svg.lucide-chevron-down');
-          if(ic){ic.style.transition='transform 0.3s ease';ic.style.transform='rotate(0deg)';}
-        });
-        if(!open){
-          answer.style.maxHeight=answer.scrollHeight+'px';
-          item.classList.add('active');
-          var icon=btn.querySelector('.faq-icon,svg.lucide-chevron-down');
-          if(icon){icon.style.transition='transform 0.3s ease';icon.style.transform='rotate(45deg)';}
-        }
-      }
+      });
     });
-  });
-})();
-</script>
-  <script>
-(function(){
-  var els = document.querySelectorAll('.fade-in');
-  if (!els.length) return;
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+
+    // Копирование IP
+    function copyIP() {
+      const ip = '[SERVER_IP]';
+      const label = document.getElementById('copy-label');
+      navigator.clipboard.writeText(ip).then(() => {
+        label.textContent = 'Скопировано!';
+        setTimeout(() => label.textContent = 'Копировать', 2000);
+      }).catch(() => {
+        // fallback
+        const el = document.createElement('textarea');
+        el.value = ip;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        label.textContent = 'Скопировано!';
+        setTimeout(() => label.textContent = 'Копировать', 2000);
+      });
+    }
+    window.copyIP = copyIP;
+
+    // Год в футере
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    // Появление элементов при скролле
+    const faders = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
       });
     }, { threshold: 0.1 });
-    els.forEach(function(el) { io.observe(el); });
-  } else {
-    els.forEach(function(el) { el.classList.add('visible'); });
-  }
-  // Fallback: if elements are still hidden after 3s, force show
-  setTimeout(function() {
-    document.querySelectorAll('.fade-in:not(.visible)').forEach(function(el) {
-      el.classList.add('visible');
-    });
-  }, 3000);
-})();
-</script>
-  <script>
-(function(){
-  var h=document.querySelector('header');
-  if(!h)return;
-  var i,c,sp;
-  // --- Scroll state: toggle .wvibe-scrolled for header readability ---
-  var onScroll=function(){
-    if(window.scrollY>60)h.classList.add('wvibe-scrolled');
-    else h.classList.remove('wvibe-scrolled');
-  };
-  window.addEventListener('scroll',onScroll,{passive:true});
-  onScroll();
-  // --- Auto-fix: push non-section content below fixed header ---
-  var cs=window.getComputedStyle(h);
-  if(cs.position==='fixed'||cs.position==='sticky'){
-    var nxt=h.nextElementSibling;
-    while(nxt&&nxt.tagName.toLowerCase()==='script')nxt=nxt.nextElementSibling;
-    if(nxt&&nxt.tagName.toLowerCase()!=='section'){
-      nxt.style.paddingTop=h.offsetHeight+'px';
-    }
-  }
-  // --- Burger menu ---
-  var btns=h.querySelectorAll('button'),btn=null;
-  for(i=0;i<btns.length;i++){
-    c=btns[i].className||'';
-    if(c.indexOf('lg:hidden')>-1||c.indexOf('md:hidden')>-1){btn=btns[i];break}
-  }
-  if(!btn)return;
-  var menu=h.querySelector('#mobile-menu')||h.querySelector('#mobile-nav');
-  if(!menu){
-    var els=h.querySelectorAll('div,nav');
-    for(i=0;i<els.length;i++){
-      c=els[i].className||'';sp=' '+c+' ';
-      if(sp.indexOf(' hidden ')>-1&&(c.indexOf('lg:hidden')>-1||c.indexOf('md:hidden')>-1)){
-        menu=els[i];break;
-      }
-    }
-  }
-  if(!menu)return;
-  var nb=btn.cloneNode(true);
-  nb.removeAttribute('onclick');
-  btn.parentNode.replaceChild(nb,btn);
-  nb.addEventListener('click',function(e){
-    e.stopPropagation();menu.classList.toggle('hidden');
-  });
-  var links=menu.querySelectorAll('a');
-  for(i=0;i<links.length;i++){
-    links[i].addEventListener('click',function(){menu.classList.add('hidden')});
-  }
-  document.addEventListener('click',function(e){
-    if(!menu.classList.contains('hidden')&&!h.contains(e.target))menu.classList.add('hidden');
-  });
-})();
-</script>
-  <script>
-(function(){
-  if(typeof lucide!=='undefined'&&lucide.createIcons){
-    try{lucide.createIcons()}catch(e){}
-  }
-})();
-</script>
-  
-<script>
-(function(){
-  document.addEventListener("click",function(e){
-    var a=e.target&&e.target.closest?e.target.closest("a"):null;
-    if(!a)return;
-    var href=a.getAttribute("href");
-    if(!href)return;
-    if(/^(https?:|mailto:|tel:|#|\/\/)/.test(href))return;
-    var hashIdx=href.indexOf("#");
-    var fragment=hashIdx!==-1?href.substring(hashIdx):"";
-    var path=hashIdx!==-1?href.substring(0,hashIdx):href;
-    if(path&&!/\.html$/.test(path))return;
-    e.preventDefault();
-    if(!path){
-      if(fragment){var el=document.querySelector(fragment);if(el)el.scrollIntoView({behavior:"smooth"});}
-      return;
-    }
-    var slug=path.replace(/\.html$/,"").replace(/^\//,"");
-    var curPage=new URL(window.location.href).searchParams.get("page")||"index";
-    if((!slug||slug==="index")&&slug===curPage||slug===curPage){
-      if(fragment){var el2=document.querySelector(fragment);if(el2)el2.scrollIntoView({behavior:"smooth"});}
-      return;
-    }
-    var url=new URL(window.location.href);
-    if(!slug||slug==="index"){url.searchParams.delete("page")}
-    else{url.searchParams.set("page",slug)}
-    url.hash=fragment;
-    window.location.href=url.toString();
-  },true);
-})();
-</script>
-<style>body{padding-bottom:48px!important}</style>
-<script>
-(function(){
-  // Create watermark bar via JS and append directly to body
-  // (CSS position:fixed breaks when any ancestor has transform)
-  var bar=document.createElement('div');
-  bar.id='wvibe-share-bar';
-  bar.style.cssText='position:fixed;bottom:0;left:0;right:0;width:100vw;max-width:none;z-index:99999;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;font-size:14px;color:#e5e5e5;box-shadow:0 -2px 12px rgba(0,0,0,0.3);margin:0;transform:none;border:none;';
-  bar.innerHTML='<span>Сделано на <a href="https://wvibe.ru/invite/z1a3e00q" target="_blank" rel="noopener" style="color:#E69865;text-decoration:none;font-weight:600;">WVibe</a></span><span style="color:#555;"> — </span><a href="https://wvibe.ru/invite/z1a3e00q" target="_blank" rel="noopener" style="color:#E69865;text-decoration:none;font-weight:600;">Создай свой сайт бесплатно за 5 минут</a>';
-  document.body.appendChild(bar);
-
-  // Rewrite internal .html links to ?page= for multi-page shared sites
-  document.addEventListener('click',function(e){
-    var a=e.target.closest('a');
-    if(!a)return;
-    var href=a.getAttribute('href');
-    if(!href)return;
-    // Skip external links, anchors, javascript:, mailto:, tel:
-    if(/^(https?:\/\/|mailto:|tel:|javascript:)/.test(href))return;
-    if(href.startsWith('#'))return;
-    // Match internal page links like "services.html" or "./about.html"
-    var m=href.match(/^(?:\.\/)?([\w-]+)\.html(?:#.*)?$/);
-    if(m){
-      e.preventDefault();
-      var slug=m[1];
-      var url=window.location.pathname+'?page='+slug;
-      window.location.href=url;
-      return;
-    }
-    // Match anchor links like "#services" used in single-page sites
-    // (no rewrite needed, just allow default behavior)
-  },true);
-})();
-</script>
+    faders.forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
