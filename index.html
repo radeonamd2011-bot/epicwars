@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EpicWars — Правила Minecraft сервера</title>
-  <meta name="description" content="Официальные правила Minecraft сервера EpicWars. Тактическая командная игра, захват флага, уничтожение баз. Версия 1.21.11">
+  <meta name="description" content="Официальные правила Minecraft сервера EpicWars. Тактическая командная игра, захват флага, уничтожение баз. Версия 1.21.1.">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,112 +12,205 @@
   <script src="https://unpkg.com/lucide@0.469.0"></script>
   <style>
     * { box-sizing: border-box; }
-    body { background: #111111; color: #f5f5f5; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+    body {
+      background: #111111;
+      color: #f5f5f5;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
     .font-serif { font-family: 'DM Serif Display', serif; }
     .font-mono { font-family: 'IBM Plex Mono', monospace; }
 
-    /* Header scroll */
-    #main-header { transition: background 0.4s ease, backdrop-filter 0.4s ease; }
-    #main-header.scrolled {
-      background: rgba(17, 17, 17, 0.97) !important;
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+    /* Улучшенный header с glass-эффектом */
+    #main-header {
+      transition: background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.3s ease;
+      background: rgba(17, 17, 17, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,107,53,0.2);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
-    #main-header.scrolled .nav-link { color: #f5f5f5; }
-    #main-header.scrolled .logo-text { color: #f5f5f5; }
+    #main-header.scrolled {
+      background: rgba(10, 10, 10, 0.95) !important;
+      backdrop-filter: blur(16px);
+      border-bottom-color: rgba(255,107,53,0.4);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    }
+    #main-header .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    #main-header .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #FF6B35;
+      transition: width 0.3s ease;
+    }
+    #main-header .nav-link:hover::after {
+      width: 100%;
+    }
 
-    /* Fade-in */
+    /* Hero фон с анимацией */
+    #hero {
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,107,53,0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 70%, rgba(255,107,53,0.1) 0%, transparent 50%);
+      animation: moveGradient 20s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes moveGradient {
+      0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
+      100% { transform: scale(1.2) translate(-2%, -2%); opacity: 0.8; }
+    }
+
+    /* Карточки с улучшенным hover */
+    .rule-card {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      background: transparent;
+    }
+    .rule-card:hover {
+      border-color: #FF6B35;
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px -8px rgba(255,107,53,0.3);
+      background: rgba(255,107,53,0.02);
+    }
+
+    /* Кнопки с glow-эффектом */
+    button, a.bg-white, a[class*="border"] {
+      transition: all 0.3s ease !important;
+      position: relative;
+      overflow: hidden;
+    }
+    button:hover, a.bg-white:hover, a[class*="border"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(255,107,53,0.5);
+    }
+    button:active, a:active {
+      transform: translateY(0);
+    }
+
+    /* Иконки с анимацией */
+    .rule-card i, .punish-step i, .fade-in i {
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    .rule-card:hover i, .punish-step:hover i {
+      transform: scale(1.1);
+      color: #FF6B35;
+    }
+
+    /* FAQ аккордеон */
+    .faq-trigger i {
+      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), color 0.3s;
+    }
+    .faq-trigger:hover i {
+      color: #FF6B35;
+    }
+    .faq-icon.rotated {
+      transform: rotate(45deg) scale(1.1);
+    }
+    .faq-answer {
+      transition: max-height 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    /* Разделители */
+    .section-divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #FF6B35, #FFA07A);
+      border-radius: 3px;
+      margin: 0 auto 32px;
+    }
+
+    /* Плавное появление */
     .fade-in {
       opacity: 0;
       transform: translateY(24px);
-      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+      transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.8s cubic-bezier(0.2, 0.9, 0.3, 1);
     }
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* Rule card */
-    .rule-card {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      transition: border-color 0.3s ease;
-    }
-    .rule-card:hover { border-color: rgba(255, 107, 53, 0.4); }
-
-    /* FAQ / accordion */
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease, padding 0.3s ease;
-    }
-    .faq-answer.open { max-height: 600px; }
-    .faq-icon { transition: transform 0.4s ease; }
-    .faq-icon.rotated { transform: rotate(45deg); }
-
-    /* Punishment step */
-    .punish-step {
-      position: relative;
-      transition: transform 0.3s ease;
-    }
-    .punish-step:hover { transform: translateX(8px); }
-
-    /* Number counter */
+    /* Статистика */
     .counter-num {
       font-family: 'DM Serif Display', serif;
       font-size: clamp(3rem, 8vw, 5rem);
       line-height: 1;
       color: #FF6B35;
+      transition: text-shadow 0.3s;
+    }
+    .counter-num:hover {
+      text-shadow: 0 0 20px #FF6B35;
     }
 
-    /* IP copy button */
-    #ip-display {
-      font-family: 'IBM Plex Mono', monospace;
-      letter-spacing: 0.05em;
-      user-select: all;
+    /* Кнопка копирования IP */
+    #copy-ip-btn {
+      position: relative;
+    }
+    #copy-ip-btn::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      top: 8px;
+      right: 8px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.8); opacity: 0.8; }
     }
 
-    /* Mobile menu */
+    /* Мобильное меню */
     #mobile-menu {
       background: rgba(17,17,17,0.98);
-      border-top: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255,107,53,0.3);
+      transition: all 0.3s ease;
     }
 
-    /* Divider line */
-    .section-divider {
-      width: 40px;
-      height: 2px;
-      background: #FF6B35;
-      margin: 0 auto 32px;
+    /* Футер */
+    footer {
+      border-top: 1px solid rgba(255,107,53,0.2);
+      background: #0a0a0a;
     }
 
-    /* Tag badge */
-    .badge {
-      display: inline-block;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border: 1px solid rgba(255,107,53,0.4);
-      color: #FF6B35;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
+    /* Стилизация скроллбара */
+    ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #111; }
-    ::-webkit-scrollbar-thumb { background: #FF6B35; }
+    ::-webkit-scrollbar-thumb { background: #FF6B35; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #ff824d; }
   </style>
 </head>
 <body>
-  <header id="main-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-50">
     <div class="max-w-6xl mx-auto px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         <!-- Logo -->
-        <a href="#hero" class="flex items-center gap-3">
-          <div class="w-9 h-9 bg-red-600 flex items-center justify-center" style="background:#FF6B35;">
+        <a href="#hero" class="flex items-center gap-3 group">
+          <div class="w-9 h-9 flex items-center justify-center transition-transform group-hover:scale-110" style="background:#FF6B35;">
             <span class="text-white font-bold text-sm font-mono">EW</span>
           </div>
-          <span class="logo-text text-white font-bold tracking-widest text-sm uppercase font-mono">EpicWars</span>
+          <span class="logo-text text-white font-bold tracking-widest text-sm uppercase font-mono group-hover:text-[#FF6B35] transition-colors">EpicWars</span>
         </a>
 
         <!-- Desktop Nav -->
@@ -126,12 +219,12 @@
           <a href="#rules" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Правила</a>
           <a href="#punishments" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Наказания</a>
           <a href="#faq" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">FAQ</a>
-          <a href="#join" class="bg-white text-black px-6 py-2.5 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300">Играть</a>
+          <a href="#join" class="bg-white text-black px-6 py-2.5 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all duration-300 rounded-sm">Играть</a>
         </nav>
 
         <!-- Burger -->
         <button class="lg:hidden p-2 text-white" aria-label="Меню" id="menu-toggle">
-          <i data-lucide="menu" class="w-6 h-6"></i>
+          <i data-lucide="menu" class="w-6 h-6 transition-transform hover:rotate-90 duration-300"></i>
         </button>
       </div>
     </div>
@@ -143,13 +236,13 @@
         <a href="#rules" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Правила</a>
         <a href="#punishments" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Наказания</a>
         <a href="#faq" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">FAQ</a>
-        <a href="#join" class="bg-white text-black px-6 py-3 text-xs font-semibold uppercase tracking-widest text-center hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 mt-2">Играть</a>
+        <a href="#join" class="bg-white text-black px-6 py-3 text-xs font-semibold uppercase tracking-widest text-center hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 mt-2 rounded-sm">Играть</a>
       </nav>
     </div>
   </header>
 
   <!-- HERO -->
-  <section id="hero" class="min-h-screen flex items-center justify-center px-6 relative overflow-hidden" style="background:#111111;">
+  <section id="hero" class="min-h-screen flex items-center justify-center px-6 relative" style="background:#111111;">
     <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 60px 60px;"></div>
 
     <div class="max-w-5xl text-center relative z-10">
@@ -164,28 +257,28 @@
       </p>
 
       <div class="flex flex-col sm:flex-row justify-center gap-4 mt-12 fade-in">
-        <a href="#rules" class="bg-white text-black px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300">
+        <a href="#rules" class="bg-white text-black px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all duration-300 rounded-sm">
           Читать правила
         </a>
-        <a href="#join" class="border border-white/20 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-colors duration-300">
+        <a href="#join" class="border border-white/20 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-all duration-300 rounded-sm">
           Присоединиться
         </a>
       </div>
 
       <!-- Stats row -->
       <div class="mt-20 flex flex-col sm:flex-row justify-center gap-12 sm:gap-16 fade-in">
-        <div>
-          <p class="font-serif text-4xl text-white" style="font-family:'DM Serif Display',serif;">4</p>
+        <div class="group">
+          <p class="font-serif text-4xl text-white counter-num group-hover:text-[#FF6B35] transition-colors" style="font-family:'DM Serif Display',serif;">4</p>
           <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Базы команды</p>
         </div>
         <div class="hidden sm:block w-px bg-white/10"></div>
-        <div>
-          <p class="font-serif text-4xl text-white" style="font-family:'DM Serif Display',serif;">2</p>
+        <div class="group">
+          <p class="font-serif text-4xl text-white counter-num group-hover:text-[#FF6B35] transition-colors" style="font-family:'DM Serif Display',serif;">2</p>
           <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Команды</p>
         </div>
         <div class="hidden sm:block w-px bg-white/10"></div>
-        <div>
-          <p class="font-serif text-4xl" style="font-family:'DM Serif Display',serif; color:#FF6B35;">1</p>
+        <div class="group">
+          <p class="font-serif text-4xl counter-num" style="font-family:'DM Serif Display',serif;">1</p>
           <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Победитель</p>
         </div>
       </div>
@@ -207,7 +300,7 @@
         <div class="rule-card pt-10 pb-10 pr-8 fade-in">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">01</span>
-            <div class="w-10 h-10 flex items-center justify-center border border-white/10">
+            <div class="w-10 h-10 flex items-center justify-center border border-white/10 transition-all group-hover:border-[#FF6B35]">
               <i data-lucide="zap" class="w-5 h-5" style="color:#FF6B35;"></i>
             </div>
           </div>
@@ -265,22 +358,22 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-white/8 fade-in">
-        <div class="p-8 lg:p-10 border-b sm:border-b-0 border-white/8 sm:border-r hover:bg-white/[0.02] transition-colors duration-300">
+        <div class="p-8 lg:p-10 border-b sm:border-b-0 border-white/8 sm:border-r hover:bg-white/[0.02] transition-all duration-300 hover:shadow-lg hover:shadow-[#FF6B35]/10">
           <i data-lucide="trending-up" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
           <h3 class="text-base font-semibold text-white mb-3">Развиваться</h3>
           <p class="text-sm text-white/40 leading-relaxed">Добывайте ресурсы, крафтите броню и оружие. Чем сильнее команда — тем ближе победа.</p>
         </div>
-        <div class="p-8 lg:p-10 border-b sm:border-b-0 border-white/8 lg:border-r hover:bg-white/[0.02] transition-colors duration-300">
+        <div class="p-8 lg:p-10 border-b sm:border-b-0 border-white/8 lg:border-r hover:bg-white/[0.02] transition-all duration-300 hover:shadow-lg hover:shadow-[#FF6B35]/10">
           <i data-lucide="shield" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
           <h3 class="text-base font-semibold text-white mb-3">Защищать базу</h3>
           <p class="text-sm text-white/40 leading-relaxed">Не давайте разрушить ваши базы. Стройте укрепления, ставьте ловушки, охраняйте флаг.</p>
         </div>
-        <div class="p-8 lg:p-10 border-b lg:border-b-0 border-white/8 sm:border-r hover:bg-white/[0.02] transition-colors duration-300">
+        <div class="p-8 lg:p-10 border-b lg:border-b-0 border-white/8 sm:border-r hover:bg-white/[0.02] transition-all duration-300 hover:shadow-lg hover:shadow-[#FF6B35]/10">
           <i data-lucide="users" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
           <h3 class="text-base font-semibold text-white mb-3">Распределять роли</h3>
           <p class="text-sm text-white/40 leading-relaxed">Разведка, защита тыла, тяжёлая атака. Договаривайтесь и действуйте как единый механизм.</p>
         </div>
-        <div class="p-8 lg:p-10 hover:bg-white/[0.02] transition-colors duration-300">
+        <div class="p-8 lg:p-10 hover:bg-white/[0.02] transition-all duration-300 hover:shadow-lg hover:shadow-[#FF6B35]/10">
           <i data-lucide="crosshair" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
           <h3 class="text-base font-semibold text-white mb-3">Стратегия</h3>
           <p class="text-sm text-white/40 leading-relaxed">Воруй ресурсы врага — это легально. Ослабляй противника, прежде чем идти на финальный штурм.</p>
@@ -288,9 +381,9 @@
       </div>
 
       <!-- Important note -->
-      <div class="mt-12 p-8 border border-white/8 fade-in">
+      <div class="mt-12 p-8 border border-white/8 fade-in hover:border-[#FF6B35]/40 transition-colors duration-300">
         <div class="flex flex-col sm:flex-row gap-6 items-start">
-          <i data-lucide="info" class="w-5 h-5 text-white/30 mt-0.5 flex-shrink-0"></i>
+          <i data-lucide="info" class="w-5 h-5 text-white/30 mt-0.5 flex-shrink-0 group-hover:text-[#FF6B35]"></i>
           <div>
             <p class="text-sm text-white/50 leading-relaxed">
               <span class="text-white font-medium">Важно:</span> Игра идёт до тех пор, пока одна из команд не выполнит все условия победы. Воровать ресурсы у врага в рамках конфликта — <span style="color:#FF6B35;">нормальная тактика</span>. Носитель флага должен быть прикрыт командой — враги будут охотиться за ним.
@@ -410,7 +503,7 @@
               <h3 class="text-xl font-semibold text-white lg:w-48">Мирная зона — Город</h3>
             </div>
             <div class="flex-1">
-              <div class="mb-5 p-4 border border-green-500/10 bg-green-500/[0.03]">
+              <div class="mb-5 p-4 border border-green-500/10 bg-green-500/[0.03] hover:border-green-500/30 transition-colors">
                 <p class="text-sm text-white/50">Радиус ~200 блоков от центра города — зелёная зона. Все в безопасности.</p>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -435,12 +528,12 @@
             </div>
             <div class="flex-1">
               <div class="flex flex-col sm:flex-row gap-4">
-                <div class="flex-1 p-5 border border-white/8">
+                <div class="flex-1 p-5 border border-white/8 hover:border-[#FF6B35]/50 transition-colors">
                   <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Основная база</p>
                   <p class="text-2xl font-semibold text-white mb-1">1 штука</p>
                   <p class="text-sm text-white/40">До 75 × 75 блоков</p>
                 </div>
-                <div class="flex-1 p-5 border border-white/8">
+                <div class="flex-1 p-5 border border-white/8 hover:border-[#FF6B35]/50 transition-colors">
                   <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Мини-базы</p>
                   <p class="text-2xl font-semibold text-white mb-1">До 3 штук</p>
                   <p class="text-sm text-white/40">До 45 × 45 блоков каждая</p>
@@ -520,26 +613,26 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start fade-in">
         <!-- Steps -->
         <div class="space-y-0">
-          <div class="punish-step flex gap-8 py-8 border-b border-white/8">
+          <div class="punish-step flex gap-8 py-8 border-b border-white/8 hover:border-[#FF6B35]/30 transition-colors">
             <div class="flex-shrink-0 text-center"><p class="font-serif text-5xl text-white/20" style="font-family:'DM Serif Display',serif;">1</p></div>
             <div class="flex-1"><p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Первое нарушение</p><h3 class="text-xl font-semibold text-white mb-2">Предупреждение</h3><p class="text-sm text-white/40 leading-relaxed">Устно или в чат. Считай это последним шансом исправиться.</p></div>
-            <div class="flex-shrink-0 self-center"><div class="w-3 h-3 bg-yellow-500/60"></div></div>
+            <div class="flex-shrink-0 self-center"><div class="w-3 h-3 bg-yellow-500/60 rounded-full animate-pulse"></div></div>
           </div>
-          <div class="punish-step flex gap-8 py-8 border-b border-white/8">
+          <div class="punish-step flex gap-8 py-8 border-b border-white/8 hover:border-[#FF6B35]/30 transition-colors">
             <div class="flex-shrink-0 text-center"><p class="font-serif text-5xl" style="font-family:'DM Serif Display',serif; color:rgba(255,107,53,0.5);">2</p></div>
             <div class="flex-1"><p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Второе нарушение</p><h3 class="text-xl font-semibold text-white mb-2">Мут или временный бан</h3><p class="text-sm text-white/40 leading-relaxed">Блокировка чата или временный бан до 1 суток. Время подумать.</p></div>
-            <div class="flex-shrink-0 self-center"><div class="w-3 h-3" style="background:rgba(255,107,53,0.6);"></div></div>
+            <div class="flex-shrink-0 self-center"><div class="w-3 h-3" style="background:rgba(255,107,53,0.6); border-radius:50%;"></div></div>
           </div>
-          <div class="punish-step flex gap-8 py-8">
+          <div class="punish-step flex gap-8 py-8 hover:border-[#FF6B35]/30 transition-colors">
             <div class="flex-shrink-0 text-center"><p class="font-serif text-5xl" style="font-family:'DM Serif Display',serif; color:#FF6B35;">3</p></div>
             <div class="flex-1"><p class="font-mono text-xs uppercase tracking-widest mb-2" style="color:rgba(255,107,53,0.4);">Третье нарушение</p><h3 class="text-xl font-semibold text-white mb-2">Перманентный бан</h3><p class="text-sm text-white/40 leading-relaxed">Игрок отстраняется от сервера навсегда. Прецедент закрыт.</p></div>
-            <div class="flex-shrink-0 self-center"><div class="w-3 h-3" style="background:#FF6B35;"></div></div>
+            <div class="flex-shrink-0 self-center"><div class="w-3 h-3" style="background:#FF6B35; border-radius:50%;"></div></div>
           </div>
         </div>
 
         <!-- Simple reminder (without admin contacts) -->
         <div>
-          <div class="p-6 border border-white/5 bg-white/[0.01]">
+          <div class="p-6 border border-white/5 bg-white/[0.01] hover:border-[#FF6B35]/30 transition-colors rounded-sm">
             <p class="text-xs font-mono text-white/20 uppercase tracking-widest mb-3">Помни</p>
             <p class="text-sm text-white/35 italic leading-relaxed">
               "Это всего лишь игра. Соблюдай правила и получай удовольствие."
@@ -580,7 +673,7 @@
           </button>
           <div class="faq-answer">
             <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-              Нет, этот сервер - командная игра, каждый игрок кроме нейтрального должен находится в команде.
+              Технически — да. Но режим создан для командной игры: без союзников захватить 4 базы противника и флаг практически невозможно. Найди команду или создай свою.
             </p>
           </div>
         </div>
@@ -628,7 +721,7 @@
           </button>
           <div class="faq-answer">
             <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-              Если вы считаете, что бан был выдан ошибочно, вы можете обратиться к администрации через группу во Вконтакте и написать комментарий под свежим постом.
+              Если вы считаете, что бан был выдан ошибочно, вы можете обратиться к администрации через Discord-канал поддержки или написать на форуме. Подробности смотрите в разделе «Контакты» на нашем сайте.
             </p>
           </div>
         </div>
@@ -644,27 +737,27 @@
         Готов к бою?
       </h2>
       <p class="text-base text-white/35 max-w-md mx-auto leading-relaxed mb-14">
-        Minecraft Java Edition 1.21.11 Подключись прямо сейчас и найди свою команду.
+        Minecraft Java Edition 1.21.1. Подключись прямо сейчас и найди свою команду.
       </p>
 
       <!-- IP Block -->
       <div class="flex flex-col sm:flex-row items-center justify-center gap-0 max-w-xl mx-auto mb-10">
-        <div class="flex-1 w-full border border-white/15 px-6 py-4 bg-white/[0.02] flex items-center gap-3">
+        <div class="flex-1 w-full border border-white/15 px-6 py-4 bg-white/[0.02] flex items-center gap-3 rounded-l-sm">
           <i data-lucide="server" class="w-4 h-4 text-white/30 flex-shrink-0"></i>
           <span id="ip-display" class="text-white text-sm flex-1 text-left">epicwars.ender-zone.com</span>
         </div>
-        <button id="copy-ip-btn" onclick="copyIP()" class="w-full sm:w-auto bg-white text-black px-7 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 border border-white/15 border-l-0 flex items-center justify-center gap-2">
+        <button id="copy-ip-btn" onclick="copyIP()" class="w-full sm:w-auto bg-white text-black px-7 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all duration-300 border border-white/15 border-l-0 flex items-center justify-center gap-2 rounded-r-sm">
           <i data-lucide="copy" class="w-4 h-4"></i>
           <span id="copy-label">Копировать</span>
         </button>
       </div>
 
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="#" target="_blank" class="border border-white/15 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-colors duration-300 flex items-center justify-center gap-2">
+        <a href="#" target="_blank" class="border border-white/15 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center gap-2 rounded-sm">
           <i data-lucide="message-circle" class="w-4 h-4"></i>
           Discord сервер
         </a>
-        <a href="#rules" class="border border-white/8 text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-colors duration-300 flex items-center justify-center gap-2">
+        <a href="#rules" class="border border-white/8 text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-all duration-300 flex items-center justify-center gap-2 rounded-sm">
           <i data-lucide="book-open" class="w-4 h-4"></i>
           Читать правила
         </a>
@@ -675,7 +768,7 @@
   </section>
 
   <!-- FOOTER -->
-  <footer class="border-t border-white/8 bg-[#0d0d0d]">
+  <footer class="border-t border-white/8 bg-[#0a0a0a]">
     <div class="max-w-6xl mx-auto px-6 lg:px-8 py-16">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
         <!-- Brand -->
@@ -726,7 +819,7 @@
     // Инициализация иконок
     lucide.createIcons();
 
-    // Плавный скролл к якорям
+    // Плавный скролл к якорям (дополнительно к CSS)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
         const target = document.querySelector(this.getAttribute('href'));
