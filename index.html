@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[SERVER_NAME] — Правила Minecraft сервера</title>
-  <meta name="description" content="Официальные правила Minecraft сервера [SERVER_NAME]. Тактическая командная игра, захват флага, уничтожение баз. Версия 1.21.1.">
+  <title>EpicWars — Правила Minecraft сервера</title>
+  <meta name="description" content="Официальные правила Minecraft сервера EpicWars. Тактическая командная игра, захват флага, уничтожение баз. Версия 1.21.1.">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -115,9 +115,9 @@
         <!-- Logo -->
         <a href="#hero" class="flex items-center gap-3">
           <div class="w-9 h-9 bg-red-600 flex items-center justify-center" style="background:#FF6B35;">
-            <span class="text-white font-bold text-sm font-mono">[ЛОГО]</span>
+            <span class="text-white font-bold text-sm font-mono">EW</span>
           </div>
-          <span class="logo-text text-white font-bold tracking-widest text-sm uppercase font-mono">[SERVER_NAME]</span>
+          <span class="logo-text text-white font-bold tracking-widest text-sm uppercase font-mono">EpicWars</span>
         </a>
 
         <!-- Desktop Nav -->
@@ -467,7 +467,7 @@
               </div>
               <div class="flex gap-3">
                 <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);"><span class="text-xs font-mono" style="color:#FF6B35;">✕</span></div>
-                <p class="text-sm text-white/40 leading-relaxed">Кража со склада строго запрещена. Все операции логируются — админ найдёт виновного.</p>
+                <p class="text-sm text-white/40 leading-relaxed">Кража со склада строго запрещена. Все операции логируются — администрация найдёт виновного.</p>
               </div>
             </div>
           </div>
@@ -537,25 +537,13 @@
           </div>
         </div>
 
-        <!-- Appeal block -->
+        <!-- Simple reminder (without admin contacts) -->
         <div>
-          <div class="p-8 lg:p-10 border border-white/8">
-            <i data-lucide="heart" class="w-6 h-6 mb-6" style="color:#FF6B35;"></i>
-            <h3 class="text-xl font-semibold text-white mb-4">Считаешь наказание несправедливым?</h3>
-            <p class="text-sm text-white/40 leading-relaxed mb-6">
-              Напиши администратору в личку. Мы всегда открыты к диалогу и пересмотру — если ты готов объясниться спокойно.
-            </p>
-            <p class="text-sm text-white/40 leading-relaxed mb-8">
-              У нас небольшое и уютное комьюнити. Бан — не месть. Просто так сложились обстоятельства.
-            </p>
-            <div class="flex items-center gap-3 p-4 border border-white/8 bg-white/[0.02]">
-              <i data-lucide="at-sign" class="w-4 h-4 text-white/30"></i>
-              <span class="font-mono text-sm text-white/50">[ADMIN_CONTACT]</span>
-            </div>
-          </div>
-          <div class="mt-6 p-6 border border-white/5 bg-white/[0.01]">
+          <div class="p-6 border border-white/5 bg-white/[0.01]">
             <p class="text-xs font-mono text-white/20 uppercase tracking-widest mb-3">Помни</p>
-            <p class="text-sm text-white/35 italic leading-relaxed">"Это всего лишь игра. Соблюдай правила и получай удовольствие."</p>
+            <p class="text-sm text-white/35 italic leading-relaxed">
+              "Это всего лишь игра. Соблюдай правила и получай удовольствие."
+            </p>
           </div>
         </div>
       </div>
@@ -580,7 +568,7 @@
           </button>
           <div class="faq-answer">
             <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-              Запусти Minecraft Java Edition версии 1.21.1, добавь сервер с адресом <span class="font-mono text-white">[SERVER_IP]</span> и подключись. Никакой регистрации — просто заходи и играй. Прочитай правила перед входом!
+              Запусти Minecraft Java Edition версии 1.21.1, добавь сервер с адресом <span class="font-mono text-white">epicwars.ender-zone.com</span> и подключись. Никакой регистрации — просто заходи и играй. Прочитай правила перед входом!
             </p>
           </div>
         </div>
@@ -640,7 +628,7 @@
           </button>
           <div class="faq-answer">
             <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-              Напиши администратору напрямую: в Discord <span class="font-mono text-white">[DISCORD_LINK]</span> или в Telegram <span class="font-mono text-white">[ADMIN_CONTACT]</span>. Изложи ситуацию спокойно.
+              Если вы считаете, что бан был выдан ошибочно, вы можете обратиться к администрации через Discord-канал поддержки или написать на форуме. Подробности смотрите в разделе «Контакты» на нашем сайте.
             </p>
           </div>
         </div>
@@ -663,7 +651,7 @@
       <div class="flex flex-col sm:flex-row items-center justify-center gap-0 max-w-xl mx-auto mb-10">
         <div class="flex-1 w-full border border-white/15 px-6 py-4 bg-white/[0.02] flex items-center gap-3">
           <i data-lucide="server" class="w-4 h-4 text-white/30 flex-shrink-0"></i>
-          <span id="ip-display" class="text-white text-sm flex-1 text-left">[SERVER_IP]</span>
+          <span id="ip-display" class="text-white text-sm flex-1 text-left">epicwars.ender-zone.com</span>
         </div>
         <button id="copy-ip-btn" onclick="copyIP()" class="w-full sm:w-auto bg-white text-black px-7 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 border border-white/15 border-l-0 flex items-center justify-center gap-2">
           <i data-lucide="copy" class="w-4 h-4"></i>
@@ -672,7 +660,7 @@
       </div>
 
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="[DISCORD_LINK]" target="_blank" class="border border-white/15 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-colors duration-300 flex items-center justify-center gap-2">
+        <a href="#" target="_blank" class="border border-white/15 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-colors duration-300 flex items-center justify-center gap-2">
           <i data-lucide="message-circle" class="w-4 h-4"></i>
           Discord сервер
         </a>
@@ -694,9 +682,9 @@
         <div>
           <div class="flex items-center gap-3 mb-5">
             <div class="w-9 h-9 flex items-center justify-center" style="background:#FF6B35;">
-              <span class="text-white font-bold text-sm font-mono">[ЛОГО]</span>
+              <span class="text-white font-bold text-sm font-mono">EW</span>
             </div>
-            <span class="text-white font-bold tracking-widest text-sm uppercase font-mono">[SERVER_NAME]</span>
+            <span class="text-white font-bold tracking-widest text-sm uppercase font-mono">EpicWars</span>
           </div>
           <p class="text-sm text-white/40 leading-relaxed max-w-xs">
             Тактическая командная игра. Взрывай базы, захватывай флаги, побеждай.
@@ -717,19 +705,17 @@
           </nav>
         </div>
 
-        <!-- Contacts -->
+        <!-- Contacts (only IP) -->
         <div>
           <p class="text-xs uppercase tracking-widest text-white/30 mb-5 font-mono">Контакты</p>
           <div class="flex flex-col gap-3">
-            <p class="text-sm text-white/50">IP: <span class="font-mono text-white">[SERVER_IP]</span></p>
-            <p class="text-sm text-white/50">Discord: <span class="text-white">[DISCORD_LINK]</span></p>
-            <p class="text-sm text-white/50">Админ: <span class="text-white">[ADMIN_CONTACT]</span></p>
+            <p class="text-sm text-white/50">IP: <span class="font-mono text-white">epicwars.ender-zone.com</span></p>
           </div>
         </div>
       </div>
 
       <div class="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <p class="text-xs text-white/20 font-mono">© 2024–<span id="footer-year"></span> [SERVER_NAME]. Все права защищены.</p>
+        <p class="text-xs text-white/20 font-mono">© 2024–<span id="footer-year"></span> EpicWars. Все права защищены.</p>
         <p class="text-xs text-white/20 font-mono">Minecraft 1.21.1 · Java Edition</p>
       </div>
     </div>
@@ -793,7 +779,7 @@
 
     // Копирование IP
     function copyIP() {
-      const ip = '[SERVER_IP]';
+      const ip = 'epicwars.ender-zone.com';
       const label = document.getElementById('copy-label');
       navigator.clipboard.writeText(ip).then(() => {
         label.textContent = 'Скопировано!';
