@@ -19,9 +19,10 @@
       --bg-darker: #0d0d0d;
       --bg-darkest: #0a0a0a;
       --header-h: 80px;
+      --cursor-size: 32px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; } /* Скрываем стандартный курсор */
 
     html {
       scroll-behavior: smooth;
@@ -38,10 +39,37 @@
     .font-serif { font-family: 'DM Serif Display', serif; }
     .font-mono  { font-family: 'IBM Plex Mono', monospace; }
 
-    /* ── Selection ── */
-    ::selection {
-      background: rgba(255,107,53,0.35);
-      color: #fff;
+    /* ── Кастомный курсор ── */
+    #custom-cursor {
+      position: fixed;
+      width: var(--cursor-size);
+      height: var(--cursor-size);
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease;
+      filter: drop-shadow(0 0 5px rgba(255,107,53,0.5));
+    }
+    #custom-cursor svg {
+      width: 100%;
+      height: 100%;
+      fill: var(--accent);
+      stroke: white;
+      stroke-width: 1.5;
+    }
+    a:hover ~ #custom-cursor,
+    button:hover ~ #custom-cursor,
+    .btn-primary:hover ~ #custom-cursor,
+    .btn-outline:hover ~ #custom-cursor,
+    .nav-link:hover ~ #custom-cursor,
+    .rule-card:hover ~ #custom-cursor,
+    .faq-trigger:hover ~ #custom-cursor {
+      transform: translate(-50%, -50%) scale(1.2) rotate(15deg);
+      filter: drop-shadow(0 0 15px var(--accent));
+    }
+    @media (max-width: 768px) {
+      * { cursor: auto; }
+      #custom-cursor { display: none; }
     }
 
     /* ── Scroll Progress Bar ── */
@@ -89,7 +117,7 @@
       transform: translateY(-3px) scale(1.05);
     }
 
-    /* ── Badge (was missing!) ── */
+    /* ── Badge ── */
     .badge {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 0.6875rem;
@@ -144,20 +172,38 @@
       color: #fff !important;
     }
 
-    /* ── Mobile Menu ── */
+    /* ── Mobile Menu (Drawer) ── */
     #mobile-menu {
-      background: rgba(17,17,17,0.98);
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: rgba(0,0,0,0.8);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid rgba(255,107,53,0.3);
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.4s ease;
-      opacity: 0;
+      transition: opacity 0.3s ease;
     }
-    #mobile-menu.open {
-      max-height: 400px;
+    #mobile-menu .drawer-content {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 280px;
+      background: var(--bg-darker);
+      padding: 2rem;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      border-left: 1px solid rgba(255,107,53,0.2);
+    }
+    #mobile-menu.opened {
       opacity: 1;
+      pointer-events: auto;
+    }
+    #mobile-menu.closed {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #mobile-menu.opened .drawer-content {
+      transform: translateX(0);
     }
 
     /* ── Hero ── */
@@ -180,27 +226,57 @@
       0%   { transform: scale(1) translate(0, 0); opacity: 0.5; }
       100% { transform: scale(1.2) translate(-3%, -3%); opacity: 0.9; }
     }
-
-    /* Hero grid subtle parallax */
     .hero-grid {
       transition: transform 0.1s linear;
       will-change: transform;
     }
 
-    /* ── Fade-in Animations ── */
+    /* ── Fade-in Animations (разные) ── */
     .fade-in {
       opacity: 0;
       transform: translateY(30px);
-      transition:
-        opacity 0.8s cubic-bezier(0.2, 0.9, 0.3, 1),
-        transform 0.8s cubic-bezier(0.2, 0.9, 0.3, 1);
-      will-change: opacity, transform;
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
     }
-    /* Stagger delays via JS data-delay attribute */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-in-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in-scale.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .slide-in-left {
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .slide-in-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .slide-in-right {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .slide-in-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
     .fade-in[data-delay="1"] { transition-delay: 0.1s; }
     .fade-in[data-delay="2"] { transition-delay: 0.2s; }
     .fade-in[data-delay="3"] { transition-delay: 0.3s; }
@@ -234,14 +310,12 @@
       color: var(--accent);
     }
 
-    /* ── FAQ Accordion (FIXED) ── */
+    /* ── FAQ Accordion ── */
     .faq-answer {
       max-height: 0;
       overflow: hidden;
       opacity: 0;
-      transition:
-        max-height 0.5s cubic-bezier(0.33, 1, 0.68, 1),
-        opacity 0.4s ease 0.05s;
+      transition: max-height 0.5s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.4s ease 0.05s;
     }
     .faq-answer.open {
       opacity: 1;
@@ -364,8 +438,6 @@
       border-radius: 3px;
     }
     ::-webkit-scrollbar-thumb:hover { background: #ff824d; }
-
-    /* Firefox scrollbar */
     html {
       scrollbar-width: thin;
       scrollbar-color: var(--accent) var(--bg-dark);
@@ -379,7 +451,7 @@
     }
 
     /* ── Page load animation ── */
-    body.loading > *:not(#scroll-progress) {
+    body.loading > *:not(#scroll-progress, #custom-cursor) {
       opacity: 0;
     }
     body.loaded > * {
@@ -390,12 +462,136 @@
       to   { opacity: 1; }
     }
 
-    /* ── Misc Helpers ── */
+    /* ── Glow border ── */
     .glow-border:hover {
       box-shadow: 0 0 0 1px rgba(255,107,53,0.3), 0 8px 25px -5px rgba(255,107,53,0.15);
     }
 
-    /* ── Responsive ── */
+    /* ── Новые компоненты ── */
+
+    /* Карусель отзывов */
+    .reviews-carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) var(--bg-dark);
+    }
+    .reviews-carousel::-webkit-scrollbar {
+      height: 6px;
+    }
+    .reviews-carousel::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    .reviews-carousel::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 3px;
+    }
+    .review-card {
+      flex: 0 0 300px;
+      scroll-snap-align: start;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,107,53,0.1);
+      padding: 1.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .review-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px -10px rgba(255,107,53,0.3);
+    }
+
+    /* Прогресс-бар условий */
+    #progress-bar-container {
+      position: fixed;
+      top: var(--header-h);
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.05);
+      z-index: 90;
+    }
+    #progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      transition: width 0.2s ease;
+    }
+
+    /* Модальное окно */
+    #modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #modal-content {
+      background: var(--bg-darker);
+      border: 1px solid var(--accent);
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 400px;
+      text-align: center;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+    #modal-overlay.active #modal-content {
+      transform: scale(1);
+    }
+
+    /* Навигационные точки */
+    #scroll-spy {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .spy-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .spy-dot.active {
+      background: var(--accent);
+      transform: scale(1.5);
+      box-shadow: 0 0 10px var(--accent);
+    }
+    @media (max-width: 768px) {
+      #scroll-spy { display: none; }
+    }
+
+    /* Кнопка поделиться */
+    .share-btn {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .share-btn:hover {
+      color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    /* Responsive */
     @media (max-width: 640px) {
       #scroll-top {
         bottom: 20px;
@@ -407,6 +603,40 @@
   </style>
 </head>
 <body class="loading">
+
+  <!-- Кастомный курсор -->
+  <div id="custom-cursor">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+
+  <!-- Прогресс-бар выполнения условий (имитация) -->
+  <div id="progress-bar-container">
+    <div id="progress-bar-fill"></div>
+  </div>
+
+  <!-- Навигационные точки -->
+  <div id="scroll-spy">
+    <div class="spy-dot" data-section="hero"></div>
+    <div class="spy-dot" data-section="goal"></div>
+    <div class="spy-dot" data-section="teamwork"></div>
+    <div class="spy-dot" data-section="rules"></div>
+    <div class="spy-dot" data-section="punishments"></div>
+    <div class="spy-dot" data-section="faq"></div>
+    <div class="spy-dot" data-section="reviews"></div>
+    <div class="spy-dot" data-section="join"></div>
+  </div>
+
+  <!-- Модальное окно (для копирования IP) -->
+  <div id="modal-overlay">
+    <div id="modal-content">
+      <i data-lucide="check-circle" class="w-12 h-12 text-green-500 mx-auto mb-4"></i>
+      <h3 class="text-xl font-semibold mb-2">IP скопирован!</h3>
+      <p class="text-white/60 text-sm">epicwars.ender-zone.com</p>
+      <button class="mt-4 btn-primary bg-white text-black px-6 py-2 text-xs uppercase rounded-sm" onclick="closeModal()">Закрыть</button>
+    </div>
+  </div>
 
   <!-- Scroll Progress Bar -->
   <div id="scroll-progress"></div>
@@ -436,27 +666,43 @@
           <a href="#join" class="btn-primary bg-white text-black px-6 py-2.5 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all duration-300 rounded-sm">Играть</a>
         </nav>
 
-        <!-- Burger -->
-        <button class="lg:hidden p-2 text-white" aria-label="Открыть меню" id="menu-toggle">
-          <i data-lucide="menu" class="w-6 h-6 transition-transform duration-300"></i>
-        </button>
+        <!-- Burger + Кнопка поделиться (мобильная) -->
+        <div class="flex items-center gap-3">
+          <button class="share-btn p-2 text-white/70 hover:text-white lg:hidden" onclick="shareSite()" aria-label="Поделиться">
+            <i data-lucide="share-2" class="w-5 h-5"></i>
+          </button>
+          <button class="lg:hidden p-2 text-white" aria-label="Открыть меню" id="menu-toggle">
+            <i data-lucide="menu" class="w-6 h-6 transition-transform duration-300"></i>
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="lg:hidden px-6 py-6">
-      <nav class="flex flex-col gap-5">
-        <a href="#goal" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Цель игры</a>
-        <a href="#rules" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Правила</a>
-        <a href="#punishments" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Наказания</a>
-        <a href="#faq" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">FAQ</a>
-        <a href="#join" class="btn-primary bg-white text-black px-6 py-3 text-xs font-semibold uppercase tracking-widest text-center hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 mt-2 rounded-sm">Играть</a>
-      </nav>
+    <!-- Mobile Menu (Drawer) -->
+    <div id="mobile-menu" class="closed">
+      <div class="drawer-content">
+        <button class="absolute top-4 right-4 text-white" onclick="toggleMenu(true)">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <nav class="flex flex-col gap-5 mt-12">
+          <a href="#goal" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Цель игры</a>
+          <a href="#rules" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Правила</a>
+          <a href="#punishments" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Наказания</a>
+          <a href="#faq" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">FAQ</a>
+          <a href="#reviews" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Отзывы</a>
+          <a href="#join" class="btn-primary bg-white text-black px-6 py-3 text-xs font-semibold uppercase tracking-widest text-center hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 mt-2 rounded-sm">Играть</a>
+          <button class="share-btn flex items-center gap-2 text-white/70 hover:text-white mt-4" onclick="shareSite()">
+            <i data-lucide="share-2" class="w-4 h-4"></i>
+            <span class="text-xs uppercase tracking-widest">Поделиться</span>
+          </button>
+        </nav>
+      </div>
     </div>
   </header>
 
-  <!-- HERO -->
+  <!-- HERO с частицами (Canvas) -->
   <section id="hero" class="min-h-screen flex items-center justify-center px-6 relative" style="background:var(--bg-dark);">
+    <canvas id="particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
     <div class="hero-grid absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 60px 60px;"></div>
 
     <div class="max-w-5xl text-center relative z-10">
@@ -510,7 +756,7 @@
   <!-- GOAL -->
   <section id="goal" class="py-32 lg:py-40 px-6" style="background:var(--bg-dark);">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in mb-20">
+      <div class="fade-in-up mb-20">
         <span class="badge mb-6 block w-fit">Цель игры</span>
         <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:700px;">
           Три задачи до победы
@@ -519,7 +765,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-0">
         <!-- Step 1 -->
-        <div class="rule-card pt-10 pb-10 pr-8 fade-in" data-delay="1">
+        <div class="rule-card pt-10 pb-10 pr-8 slide-in-left" data-delay="1">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">01</span>
             <div class="w-10 h-10 flex items-center justify-center border border-white/10 transition-all hover:border-[#FF6B35]/50">
@@ -534,7 +780,7 @@
         </div>
 
         <!-- Step 2 -->
-        <div class="rule-card pt-10 pb-10 px-8 fade-in" data-delay="2" style="border-left: 1px solid rgba(255,255,255,0.08);">
+        <div class="rule-card pt-10 pb-10 px-8 fade-in-up" data-delay="2" style="border-left: 1px solid rgba(255,255,255,0.08);">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">02</span>
             <div class="w-10 h-10 flex items-center justify-center border border-white/10 transition-all hover:border-[#FF6B35]/50">
@@ -549,7 +795,7 @@
         </div>
 
         <!-- Step 3 -->
-        <div class="rule-card pt-10 pb-10 pl-8 fade-in" data-delay="3" style="border-left: 1px solid rgba(255,255,255,0.08);">
+        <div class="rule-card pt-10 pb-10 pl-8 slide-in-right" data-delay="3" style="border-left: 1px solid rgba(255,255,255,0.08);">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">03</span>
             <div class="w-10 h-10 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.4);">
@@ -569,7 +815,7 @@
   <!-- TEAMWORK -->
   <section id="teamwork" class="py-32 lg:py-40 px-6" style="background:var(--bg-darker);">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in mb-20 text-center">
+      <div class="fade-in-scale mb-20 text-center">
         <span class="badge mb-6 block w-fit mx-auto">Командная игра</span>
         <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif;">
           Одиночкам здесь не выжить
@@ -615,11 +861,10 @@
       </div>
     </div>
   </section>
-
-  <!-- RULES -->
+    <!-- RULES (полностью сохранённый текст, только добавлены классы анимаций) -->
   <section id="rules" class="py-32 lg:py-40 px-6" style="background:var(--bg-dark);">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in mb-20">
+      <div class="fade-in-up mb-20">
         <span class="badge mb-6 block w-fit">Правила сервера</span>
         <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:650px;">
           Обязательно к прочтению
@@ -825,7 +1070,7 @@
   <!-- PUNISHMENTS -->
   <section id="punishments" class="py-32 lg:py-40 px-6" style="background:var(--bg-darker);">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in mb-20">
+      <div class="fade-in-up mb-20">
         <span class="badge mb-6 block w-fit">Система наказаний</span>
         <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:600px;">
           Три нарушения — и ты вне игры
@@ -868,7 +1113,7 @@
   <!-- FAQ -->
   <section id="faq" class="py-32 lg:py-40 px-6" style="background:var(--bg-dark);">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in mb-20">
+      <div class="fade-in-up mb-20">
         <span class="badge mb-6 block w-fit">Частые вопросы</span>
         <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:600px;">
           Есть вопросы?
@@ -951,7 +1196,66 @@
     </div>
   </section>
 
-  <!-- JOIN / CTA -->
+  <!-- НОВЫЙ БЛОК: Отзывы игроков -->
+  <section id="reviews" class="py-32 lg:py-40 px-6" style="background:var(--bg-darker);">
+    <div class="max-w-6xl mx-auto">
+      <div class="fade-in-up mb-20 text-center">
+        <span class="badge mb-6 block w-fit mx-auto">Отзывы</span>
+        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif;">
+          Что говорят игроки
+        </h2>
+      </div>
+
+      <div class="reviews-carousel">
+        <div class="review-card">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+          </div>
+          <p class="text-sm text-white/70 mb-4">"Лучший тактический сервер! Командные бои на высшем уровне."</p>
+          <p class="font-mono text-xs text-white/30">— DragonSlayer99</p>
+        </div>
+        <div class="review-card">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-white/20 text-white/20"></i>
+          </div>
+          <p class="text-sm text-white/70 mb-4">"Захват флага — это нечто! Админы следят за порядком, всё честно."</p>
+          <p class="font-mono text-xs text-white/30">— CreeperBuster</p>
+        </div>
+        <div class="review-card">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+          </div>
+          <p class="text-sm text-white/70 mb-4">"Играем всей гильдией — очень увлекательно. Спасибо за сервер!"</p>
+          <p class="font-mono text-xs text-white/30">— EndermanHunter</p>
+        </div>
+        <div class="review-card">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-white/20 text-white/20"></i>
+          </div>
+          <p class="text-sm text-white/70 mb-4">"Немного строгие правила, но это только плюс — никаких читеров."</p>
+          <p class="font-mono text-xs text-white/30">— SteveMaster</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN / CTA (с добавленной кнопкой поделиться) -->
   <section id="join" class="py-32 lg:py-40 px-6" style="background:var(--bg-darker);">
     <div class="max-w-4xl mx-auto text-center fade-in">
       <span class="badge mb-8 block w-fit mx-auto">Присоединиться</span>
@@ -983,13 +1287,17 @@
           <i data-lucide="book-open" class="w-4 h-4"></i>
           Читать правила
         </a>
+        <button onclick="shareSite()" class="btn-outline border border-white/8 text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-all duration-300 flex items-center justify-center gap-2 rounded-sm share-btn">
+          <i data-lucide="share-2" class="w-4 h-4"></i>
+          Поделиться
+        </button>
       </div>
 
       <p class="mt-12 font-mono text-xs text-white/15 uppercase tracking-widest">Версия 1.21.11 · Java Edition · Без платного доступа</p>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- FOOTER (с добавленной кнопкой поделиться) -->
   <footer>
     <div class="max-w-6xl mx-auto px-6 lg:px-8 py-16">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -1005,6 +1313,10 @@
             Тактическая командная игра. Взрывай базы, захватывай флаги, побеждай.
           </p>
           <p class="font-mono text-xs text-white/25 mt-4">Версия 1.21.11</p>
+          <button onclick="shareSite()" class="share-btn flex items-center gap-2 text-white/40 hover:text-white mt-4">
+            <i data-lucide="share-2" class="w-4 h-4"></i>
+            <span class="text-xs uppercase tracking-widest">Поделиться сайтом</span>
+          </button>
         </div>
 
         <!-- Nav -->
@@ -1017,6 +1329,7 @@
             <a href="#punishments" class="text-sm text-white/50 hover:text-white transition-colors">Наказания</a>
             <a href="#faq" class="text-sm text-white/50 hover:text-white transition-colors">FAQ</a>
             <a href="#join" class="text-sm text-white/50 hover:text-white transition-colors">Присоединиться</a>
+            <a href="#reviews" class="text-sm text-white/50 hover:text-white transition-colors">Отзывы</a>
           </nav>
         </div>
 
@@ -1036,102 +1349,258 @@
     </div>
   </footer>
 
-  <!-- SCRIPTS -->
   <script>
-    // ── Init Lucide Icons ──
+    // ── Инициализация Lucide ──
     lucide.createIcons();
 
-    // ── Page loaded animation ──
-    window.addEventListener('load', () => {
-      document.body.classList.remove('loading');
-      document.body.classList.add('loaded');
+    // ── Кастомный курсор ──
+    const cursor = document.getElementById('custom-cursor');
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
     });
 
-    // ── Smooth scroll with header offset ──
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        const target = document.querySelector(href);
-        if (target) {
-          e.preventDefault();
-          const headerOffset = 80;
-          const elementPosition = target.getBoundingClientRect().top + window.scrollY;
-          const offsetPosition = elementPosition - headerOffset;
-          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    // ── Мобильное меню (drawer) ──
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = menuToggle?.querySelector('i');
+
+    function toggleMenu(forceClose) {
+      if (!mobileMenu) return;
+      const isOpen = mobileMenu.classList.contains('opened');
+      if (forceClose) {
+        mobileMenu.classList.remove('opened');
+        mobileMenu.classList.add('closed');
+        if (menuIcon) menuIcon.style.transform = 'rotate(0deg)';
+      } else {
+        if (isOpen) {
+          mobileMenu.classList.remove('opened');
+          mobileMenu.classList.add('closed');
+          if (menuIcon) menuIcon.style.transform = 'rotate(0deg)';
+        } else {
+          mobileMenu.classList.remove('closed');
+          mobileMenu.classList.add('opened');
+          if (menuIcon) menuIcon.style.transform = 'rotate(90deg)';
+        }
+      }
+    }
+
+    menuToggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleMenu();
+    });
+    mobileMenu?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => toggleMenu(true));
+    });
+    mobileMenu?.addEventListener('click', (e) => {
+      if (e.target === mobileMenu) toggleMenu(true);
+    });
+
+    // ── Параллакс-частицы (Canvas) ──
+    const canvas = document.getElementById('particle-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let particles = [];
+
+      function initParticles() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        particles = [];
+        for (let i = 0; i < 50; i++) {
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            size: Math.random() * 2 + 1,
+            speedX: (Math.random() - 0.5) * 0.5,
+            speedY: (Math.random() - 0.5) * 0.5,
+          });
+        }
+      }
+
+      function drawParticles() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 107, 53, ${Math.random() * 0.3 + 0.2})`;
+          ctx.fill();
+        });
+      }
+
+      function updateParticles() {
+        particles.forEach(p => {
+          p.x += p.speedX;
+          p.y += p.speedY;
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+        });
+        drawParticles();
+        requestAnimationFrame(updateParticles);
+      }
+
+      window.addEventListener('resize', initParticles);
+      initParticles();
+      updateParticles();
+    }
+
+    // ── Прогресс-бар условий (псевдо) ──
+    const progressBar = document.getElementById('progress-bar-fill');
+    let progress = 0;
+    setInterval(() => {
+      progress = (progress + 1) % 101;
+      progressBar.style.width = progress + '%';
+    }, 200);
+
+    // ── Навигационные точки (scroll spy) ──
+    const sections = document.querySelectorAll('section[id]');
+    const dots = document.querySelectorAll('.spy-dot');
+    function updateSpy() {
+      const scrollY = window.scrollY + 120;
+      let currentSection = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+          currentSection = section.getAttribute('id');
+        }
+      });
+      dots.forEach(dot => {
+        dot.classList.toggle('active', dot.dataset.section === currentSection);
+      });
+    }
+    window.addEventListener('scroll', updateSpy);
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        const section = document.getElementById(dot.dataset.section);
+        if (section) {
+          window.scrollTo({ top: section.offsetTop - 80, behavior: 'smooth' });
         }
       });
     });
 
-    // ── Mobile Menu ──
-    const menuToggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const menuIcon = menuToggle.querySelector('i');
-    let menuOpen = false;
-
-    function toggleMenu(forceClose) {
-      menuOpen = forceClose ? false : !menuOpen;
-      if (menuOpen) {
-        mobileMenu.classList.add('open');
-        menuIcon.style.transform = 'rotate(90deg)';
-      } else {
-        mobileMenu.classList.remove('open');
-        menuIcon.style.transform = 'rotate(0deg)';
-      }
+    // ── Модальное окно при копировании IP ──
+    const modalOverlay = document.getElementById('modal-overlay');
+    function showModal() {
+      modalOverlay.classList.add('active');
+      // Опционально: звук (закомментировано)
+      // new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3').play().catch(()=>{});
     }
+    window.closeModal = function() {
+      modalOverlay.classList.remove('active');
+    };
 
-    menuToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleMenu();
-    });
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => toggleMenu(true));
-    });
-    document.addEventListener('click', (e) => {
-      if (menuOpen && !menuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
-        toggleMenu(true);
+    // Копирование IP с модалкой
+    function copyIP() {
+      const ip = 'epicwars.ender-zone.com';
+      const label = document.getElementById('copy-label');
+      navigator.clipboard.writeText(ip).then(() => {
+        label.textContent = 'Скопировано!';
+        showModal();
+        setTimeout(() => {
+          label.textContent = 'Копировать';
+        }, 2000);
+      }).catch(() => {
+        const el = document.createElement('textarea');
+        el.value = ip;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        label.textContent = 'Скопировано!';
+        showModal();
+        setTimeout(() => label.textContent = 'Копировать', 2000);
+      });
+    }
+    window.copyIP = copyIP;
+
+    // ── Поделиться сайтом ──
+    window.shareSite = function() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'EpicWars Minecraft Server',
+          text: 'Захватывающий тактический сервер с режимом захвата флага!',
+          url: window.location.href,
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          alert('Ссылка скопирована!');
+        });
       }
+    };
+
+    // ── Год в футере ──
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+
+    // ── Intersection Observer для анимаций ──
+    const animatedElements = document.querySelectorAll('.fade-in, .fade-in-up, .fade-in-scale, .slide-in-left, .slide-in-right');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+    animatedElements.forEach(el => observer.observe(el));
+
+    // ── Счётчики (анимация при наведении) ──
+    const counters = document.querySelectorAll('.counter-num');
+    counters.forEach(counter => {
+      const target = parseInt(counter.getAttribute('data-target') || '0');
+      counter.addEventListener('mouseenter', () => {
+        let current = 0;
+        const increment = target / 20;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            current = target;
+            clearInterval(timer);
+          }
+          counter.textContent = Math.round(current);
+        }, 30);
+      });
+      counter.addEventListener('mouseleave', () => {
+        counter.textContent = target;
+      });
     });
 
     // ── Header scroll state ──
     const header = document.getElementById('main-header');
-    let lastScroll = 0;
-    let ticking = false;
-
-    function updateHeader() {
-      const scrollY = window.scrollY;
-      if (scrollY > 60) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
         header.classList.add('scrolled');
       } else {
         header.classList.remove('scrolled');
       }
-      lastScroll = scrollY;
-      ticking = false;
-    }
+    });
 
-    // ── Scroll Progress Bar ──
+    // ── Scroll Progress Bar (оригинальный) ──
     const scrollProgress = document.getElementById('scroll-progress');
-    function updateScrollProgress() {
+    window.addEventListener('scroll', () => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
       scrollProgress.style.width = scrollPercent + '%';
-    }
+    });
 
     // ── Scroll-to-top Button ──
     const scrollTopBtn = document.getElementById('scroll-top');
-    function updateScrollTop() {
+    window.addEventListener('scroll', () => {
       if (window.scrollY > 500) {
         scrollTopBtn.classList.add('visible');
       } else {
         scrollTopBtn.classList.remove('visible');
       }
-    }
+    });
     scrollTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
     // ── Active Nav Link ──
-    const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-link[data-section]');
     function updateActiveNav() {
       const scrollY = window.scrollY + 120;
@@ -1147,21 +1616,9 @@
         link.classList.toggle('active', link.getAttribute('data-section') === currentSection);
       });
     }
+    window.addEventListener('scroll', updateActiveNav);
 
-    // ── Unified Scroll Handler (requestAnimationFrame) ──
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateHeader();
-          updateScrollProgress();
-          updateScrollTop();
-          updateActiveNav();
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-
-    // ── FAQ Accordion (FIXED with proper max-height) ──
+    // ── FAQ Accordion ──
     document.querySelectorAll('.faq-trigger').forEach(btn => {
       btn.addEventListener('click', function() {
         const card = this.closest('.rule-card');
@@ -1169,7 +1626,6 @@
         const icon = card.querySelector('.faq-icon');
         const isOpen = answer.classList.contains('open');
 
-        // Close all
         document.querySelectorAll('.faq-answer').forEach(a => {
           a.classList.remove('open');
           a.style.maxHeight = '0px';
@@ -1177,7 +1633,6 @@
         document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('rotated'));
         document.querySelectorAll('.faq-trigger').forEach(t => t.setAttribute('aria-expanded', 'false'));
 
-        // Open clicked (if was closed)
         if (!isOpen) {
           answer.classList.add('open');
           answer.style.maxHeight = answer.scrollHeight + 'px';
@@ -1186,82 +1641,6 @@
         }
       });
     });
-
-    // ── Copy IP ──
-    function copyIP() {
-      const ip = 'epicwars.ender-zone.com';
-      const label = document.getElementById('copy-label');
-      const btn = document.getElementById('copy-ip-btn');
-
-      navigator.clipboard.writeText(ip).then(() => {
-        label.textContent = 'Скопировано!';
-        btn.style.background = '#4ade80';
-        btn.style.color = '#000';
-        setTimeout(() => {
-          label.textContent = 'Копировать';
-          btn.style.background = '';
-          btn.style.color = '';
-        }, 2000);
-      }).catch(() => {
-        const el = document.createElement('textarea');
-        el.value = ip;
-        el.style.position = 'fixed';
-        el.style.opacity = '0';
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        label.textContent = 'Скопировано!';
-        setTimeout(() => label.textContent = 'Копировать', 2000);
-      });
-    }
-    window.copyIP = copyIP;
-
-    // ── Footer Year ──
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
-
-    // ── Intersection Observer for fade-in (with stagger support) ──
-    const faders = document.querySelectorAll('.fade-in');
-    const fadeObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          fadeObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    faders.forEach(el => fadeObserver.observe(el));
-
-    // ── Counter Animation ──
-    const counters = document.querySelectorAll('.counter-num[data-target]');
-    let countersAnimated = false;
-
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !countersAnimated) {
-          countersAnimated = true;
-          counters.forEach(counter => {
-            const target = parseInt(counter.getAttribute('data-target'));
-            let current = 0;
-            const increment = target / 30;
-            const duration = 800;
-            const stepTime = duration / 30;
-
-            const timer = setInterval(() => {
-              current += increment;
-              if (current >= target) {
-                current = target;
-                clearInterval(timer);
-              }
-              counter.textContent = Math.round(current);
-            }, stepTime);
-          });
-          counterObserver.disconnect();
-        }
-      });
-    }, { threshold: 0.5 });
-
-    counters.forEach(c => counterObserver.observe(c));
 
     // ── Subtle parallax on hero grid ──
     const heroGrid = document.querySelector('.hero-grid');
@@ -1273,6 +1652,12 @@
         }
       }, { passive: true });
     }
+
+    // ── Убираем класс loading после загрузки страницы ──
+    window.addEventListener('load', () => {
+      document.body.classList.remove('loading');
+      document.body.classList.add('loaded');
+    });
   </script>
 </body>
 </html>
