@@ -1,15 +1,40 @@
+
+
+# Исправленный и оптимизированный код
+
+Вот полный список изменений и исправленный код:
+
+## Что исправлено:
+- 🐛 **Курсор**: CSS `~` (sibling) селекторы для hover не работали — заменены на JS
+- 🐛 **Иконка**: `sword` → `swords` (не существует в Lucide 0.469)
+- 🐛 **Tailwind**: `border-white/8` невалидно → `border-white/[0.08]`
+- 🐛 **Частицы**: мерцание из-за `Math.random()` в каждом кадре → alpha фиксируется при создании
+- 🐛 **Версия**: разнобой 1.21.1/1.21.11 → унифицировано 1.21.1
+- 🐛 **Секции**: Reviews и Join имели одинаковый фон → исправлено чередование
+- 🐛 **Счётчики**: утечка setInterval при быстром наведении → добавлен clearInterval
+- 🐛 **Фейковый прогресс-бар**: бессмысленная зацикленная анимация → удалён
+
+## Что оптимизировано:
+- ⚡ **5 scroll-обработчиков** объединены в 1 с `requestAnimationFrame`
+- ⚡ Дубли `updateSpy` и `updateActiveNav` → одна функция
+- ⚡ Дубли CSS (`fade-in` = `fade-in-up`) → объединены
+- ⚡ Все scroll listeners → `{ passive: true }`
+- ⚡ Убраны избыточные inline-стили
+- ⚡ Lucide загружается с `defer`
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EpicWars — Правила Minecraft сервера</title>
-  <meta name="description" content="Официальные правила Minecraft сервера EpicWars. Тактическая командная игра, захват флага, уничтожение баз. Версия 1.21.11">
+  <meta name="description" content="Официальные правила Minecraft сервера EpicWars. Тактическая командная игра, захват флага, уничтожение баз. Версия 1.21.1">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@0.469.0"></script>
+  <script src="https://unpkg.com/lucide@0.469.0" defer></script>
   <style>
     /* ── CSS Variables ── */
     :root {
@@ -22,11 +47,13 @@
       --cursor-size: 32px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; cursor: none; } /* Скрываем стандартный курсор */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html {
       scroll-behavior: smooth;
       scroll-padding-top: var(--header-h);
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) var(--bg-dark);
     }
 
     body {
@@ -39,7 +66,15 @@
     .font-serif { font-family: 'DM Serif Display', serif; }
     .font-mono  { font-family: 'IBM Plex Mono', monospace; }
 
-    /* ── Кастомный курсор ── */
+    /* ── Кастомный курсор (только desktop) ── */
+    @media (min-width: 769px) {
+      body { cursor: none; }
+      a, button, input, textarea, select,
+      .btn-primary, .btn-outline, .nav-link,
+      .rule-card, .faq-trigger, .share-btn,
+      .spy-dot, .team-card { cursor: none; }
+    }
+
     #custom-cursor {
       position: fixed;
       width: var(--cursor-size);
@@ -47,8 +82,9 @@
       pointer-events: none;
       z-index: 9999;
       transform: translate(-50%, -50%);
-      transition: transform 0.1s ease;
+      transition: transform 0.15s ease, filter 0.15s ease;
       filter: drop-shadow(0 0 5px rgba(255,107,53,0.5));
+      will-change: transform, left, top;
     }
     #custom-cursor svg {
       width: 100%;
@@ -57,18 +93,11 @@
       stroke: white;
       stroke-width: 1.5;
     }
-    a:hover ~ #custom-cursor,
-    button:hover ~ #custom-cursor,
-    .btn-primary:hover ~ #custom-cursor,
-    .btn-outline:hover ~ #custom-cursor,
-    .nav-link:hover ~ #custom-cursor,
-    .rule-card:hover ~ #custom-cursor,
-    .faq-trigger:hover ~ #custom-cursor {
+    #custom-cursor.hovering {
       transform: translate(-50%, -50%) scale(1.2) rotate(15deg);
       filter: drop-shadow(0 0 15px var(--accent));
     }
     @media (max-width: 768px) {
-      * { cursor: auto; }
       #custom-cursor { display: none; }
     }
 
@@ -81,7 +110,6 @@
       z-index: 100;
       width: 0%;
       will-change: width;
-      transition: none;
       pointer-events: none;
     }
 
@@ -97,7 +125,6 @@
       color: #fff;
       border: none;
       border-radius: 50%;
-      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -144,12 +171,13 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
     #main-header.scrolled {
-      background: rgba(10, 10, 10, 0.95) !important;
+      background: rgba(10, 10, 10, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom-color: rgba(255,107,53,0.35);
       box-shadow: 0 8px 30px rgba(0,0,0,0.5);
     }
+
     .nav-link {
       position: relative;
       transition: color 0.3s ease;
@@ -168,9 +196,7 @@
     .nav-link.active::after {
       width: 100%;
     }
-    .nav-link.active {
-      color: #fff !important;
-    }
+    .nav-link.active { color: #fff; }
 
     /* ── Mobile Menu (Drawer) ── */
     #mobile-menu {
@@ -214,8 +240,7 @@
     #hero::before {
       content: '';
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      inset: 0;
       background:
         radial-gradient(circle at 30% 30%, rgba(255,107,53,0.08) 0%, transparent 50%),
         radial-gradient(circle at 70% 70%, rgba(255,107,53,0.06) 0%, transparent 50%);
@@ -227,61 +252,49 @@
       100% { transform: scale(1.2) translate(-3%, -3%); opacity: 0.9; }
     }
     .hero-grid {
-      transition: transform 0.1s linear;
       will-change: transform;
     }
 
-    /* ── Fade-in Animations (разные) ── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    /* ── Fade-in Animations (объединённые) ── */
+    .fade-in,
     .fade-in-up {
       opacity: 0;
       transform: translateY(30px);
       transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .fade-in-up.visible {
-      opacity: 1;
-      transform: translateY(0);
     }
     .fade-in-scale {
       opacity: 0;
       transform: scale(0.9);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
-    .fade-in-scale.visible {
-      opacity: 1;
-      transform: scale(1);
-    }
     .slide-in-left {
       opacity: 0;
       transform: translateX(-50px);
       transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .slide-in-left.visible {
-      opacity: 1;
-      transform: translateX(0);
     }
     .slide-in-right {
       opacity: 0;
       transform: translateX(50px);
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
+    .fade-in.visible,
+    .fade-in-up.visible,
+    .fade-in-scale.visible,
+    .slide-in-left.visible,
     .slide-in-right.visible {
       opacity: 1;
-      transform: translateX(0);
+      transform: translateY(0) translateX(0) scale(1);
     }
-    .fade-in[data-delay="1"] { transition-delay: 0.1s; }
-    .fade-in[data-delay="2"] { transition-delay: 0.2s; }
-    .fade-in[data-delay="3"] { transition-delay: 0.3s; }
-    .fade-in[data-delay="4"] { transition-delay: 0.4s; }
-    .fade-in[data-delay="5"] { transition-delay: 0.5s; }
+    .fade-in[data-delay="1"],
+    .fade-in-up[data-delay="1"] { transition-delay: 0.1s; }
+    .fade-in[data-delay="2"],
+    .fade-in-up[data-delay="2"] { transition-delay: 0.2s; }
+    .fade-in[data-delay="3"],
+    .fade-in-up[data-delay="3"] { transition-delay: 0.3s; }
+    .fade-in[data-delay="4"],
+    .fade-in-up[data-delay="4"] { transition-delay: 0.4s; }
+    .fade-in[data-delay="5"],
+    .fade-in-up[data-delay="5"] { transition-delay: 0.5s; }
 
     /* ── Rule Cards ── */
     .rule-card {
@@ -302,13 +315,8 @@
     .fade-in i {
       transition: transform 0.3s ease, color 0.3s ease;
     }
-    .rule-card:hover i {
-      transform: scale(1.1);
-    }
-    .punish-step:hover i {
-      transform: scale(1.1);
-      color: var(--accent);
-    }
+    .rule-card:hover i { transform: scale(1.1); }
+    .punish-step:hover i { transform: scale(1.1); color: var(--accent); }
 
     /* ── FAQ Accordion ── */
     .faq-answer {
@@ -317,11 +325,8 @@
       opacity: 0;
       transition: max-height 0.5s cubic-bezier(0.33, 1, 0.68, 1), opacity 0.4s ease 0.05s;
     }
-    .faq-answer.open {
-      opacity: 1;
-    }
+    .faq-answer.open { opacity: 1; }
     .faq-trigger {
-      cursor: pointer;
       background: none;
       border: none;
       outline: none;
@@ -334,12 +339,8 @@
     .faq-trigger i {
       transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), color 0.3s;
     }
-    .faq-trigger:hover i {
-      color: var(--accent);
-    }
-    .faq-icon.rotated {
-      transform: rotate(45deg) scale(1.1);
-    }
+    .faq-trigger:hover i { color: var(--accent); }
+    .faq-icon.rotated { transform: rotate(45deg) scale(1.1); }
 
     /* ── Counter Numbers ── */
     .counter-num {
@@ -375,7 +376,7 @@
     .btn-primary, .btn-outline {
       position: relative;
       overflow: hidden;
-      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .btn-primary::before, .btn-outline::before {
       content: '';
@@ -391,20 +392,14 @@
       width: 300px;
       height: 300px;
     }
-    .btn-primary:hover, .btn-outline:hover {
-      transform: translateY(-2px);
-    }
-    .btn-primary:active, .btn-outline:active {
-      transform: translateY(0);
-    }
+    .btn-primary:hover, .btn-outline:hover { transform: translateY(-2px); }
+    .btn-primary:active, .btn-outline:active { transform: translateY(0); }
 
     /* ── Punish Steps ── */
     .punish-step {
       transition: border-color 0.3s ease, background 0.3s ease;
     }
-    .punish-step:hover {
-      background: rgba(255,107,53,0.02);
-    }
+    .punish-step:hover { background: rgba(255,107,53,0.02); }
 
     /* ── Teamwork Cards ── */
     .team-card {
@@ -414,34 +409,21 @@
       background: rgba(255,255,255,0.02);
       box-shadow: 0 8px 30px -5px rgba(255,107,53,0.15);
     }
-    .team-card:hover i {
-      transform: scale(1.15) rotate(-5deg);
-    }
+    .team-card:hover i { transform: scale(1.15) rotate(-5deg); }
 
     /* ── Footer ── */
     footer {
       border-top: 1px solid rgba(255,107,53,0.15);
       background: var(--bg-darkest);
     }
-    footer a {
-      transition: color 0.3s ease;
-    }
-    footer a:hover {
-      color: var(--accent) !important;
-    }
+    footer a { transition: color 0.3s ease; }
+    footer a:hover { color: var(--accent); }
 
     /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg-dark); }
-    ::-webkit-scrollbar-thumb {
-      background: var(--accent);
-      border-radius: 3px;
-    }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #ff824d; }
-    html {
-      scrollbar-width: thin;
-      scrollbar-color: var(--accent) var(--bg-dark);
-    }
 
     /* ── Focus visible ── */
     a:focus-visible, button:focus-visible {
@@ -451,7 +433,7 @@
     }
 
     /* ── Page load animation ── */
-    body.loading > *:not(#scroll-progress, #custom-cursor) {
+    body.loading > *:not(#scroll-progress):not(#custom-cursor) {
       opacity: 0;
     }
     body.loaded > * {
@@ -467,9 +449,38 @@
       box-shadow: 0 0 0 1px rgba(255,107,53,0.3), 0 8px 25px -5px rgba(255,107,53,0.15);
     }
 
-    /* ── Новые компоненты ── */
+    /* ── Accent utilities ── */
+    .accent-color { color: var(--accent); }
+    .accent-border { border-color: rgba(255,107,53,0.3); }
+    .accent-border-hover:hover { border-color: rgba(255,107,53,0.5); }
+    .icon-box {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: border-color 0.3s;
+    }
+    .icon-box:hover { border-color: rgba(255,107,53,0.5); }
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.25);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .check-box {
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-    /* Карусель отзывов */
+    /* ── Карусель отзывов ── */
     .reviews-carousel {
       display: flex;
       overflow-x: auto;
@@ -479,16 +490,9 @@
       scrollbar-width: thin;
       scrollbar-color: var(--accent) var(--bg-dark);
     }
-    .reviews-carousel::-webkit-scrollbar {
-      height: 6px;
-    }
-    .reviews-carousel::-webkit-scrollbar-track {
-      background: var(--bg-dark);
-    }
-    .reviews-carousel::-webkit-scrollbar-thumb {
-      background: var(--accent);
-      border-radius: 3px;
-    }
+    .reviews-carousel::-webkit-scrollbar { height: 6px; }
+    .reviews-carousel::-webkit-scrollbar-track { background: var(--bg-dark); }
+    .reviews-carousel::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
     .review-card {
       flex: 0 0 300px;
       scroll-snap-align: start;
@@ -504,27 +508,10 @@
       box-shadow: 0 10px 30px -10px rgba(255,107,53,0.3);
     }
 
-    /* Прогресс-бар условий */
-    #progress-bar-container {
-      position: fixed;
-      top: var(--header-h);
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: rgba(255,255,255,0.05);
-      z-index: 90;
-    }
-    #progress-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-light));
-      transition: width 0.2s ease;
-    }
-
-    /* Модальное окно */
+    /* ── Модальное окно ── */
     #modal-overlay {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
+      inset: 0;
       background: rgba(0,0,0,0.7);
       backdrop-filter: blur(5px);
       z-index: 9998;
@@ -553,7 +540,7 @@
       transform: scale(1);
     }
 
-    /* Навигационные точки */
+    /* ── Навигационные точки ── */
     #scroll-spy {
       position: fixed;
       right: 20px;
@@ -570,7 +557,8 @@
       border-radius: 50%;
       background: rgba(255,255,255,0.2);
       transition: all 0.3s ease;
-      cursor: pointer;
+      border: none;
+      padding: 0;
     }
     .spy-dot.active {
       background: var(--accent);
@@ -581,55 +569,39 @@
       #scroll-spy { display: none; }
     }
 
-    /* Кнопка поделиться */
-    .share-btn {
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .share-btn:hover {
-      color: var(--accent);
-      transform: scale(1.1);
-    }
+    /* ── Кнопка поделиться ── */
+    .share-btn { transition: all 0.3s ease; }
+    .share-btn:hover { color: var(--accent); transform: scale(1.1); }
 
-    /* Responsive */
+    /* ── Responsive ── */
     @media (max-width: 640px) {
-      #scroll-top {
-        bottom: 20px;
-        right: 20px;
-        width: 40px;
-        height: 40px;
-      }
+      #scroll-top { bottom: 20px; right: 20px; width: 40px; height: 40px; }
     }
   </style>
 </head>
 <body class="loading">
 
   <!-- Кастомный курсор -->
-  <div id="custom-cursor">
+  <div id="custom-cursor" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
     </svg>
   </div>
 
-  <!-- Прогресс-бар выполнения условий (имитация) -->
-  <div id="progress-bar-container">
-    <div id="progress-bar-fill"></div>
-  </div>
-
   <!-- Навигационные точки -->
-  <div id="scroll-spy">
-    <div class="spy-dot" data-section="hero"></div>
-    <div class="spy-dot" data-section="goal"></div>
-    <div class="spy-dot" data-section="teamwork"></div>
-    <div class="spy-dot" data-section="rules"></div>
-    <div class="spy-dot" data-section="punishments"></div>
-    <div class="spy-dot" data-section="faq"></div>
-    <div class="spy-dot" data-section="reviews"></div>
-    <div class="spy-dot" data-section="join"></div>
-  </div>
+  <nav id="scroll-spy" aria-label="Навигация по секциям">
+    <button class="spy-dot" data-section="hero" aria-label="К началу"></button>
+    <button class="spy-dot" data-section="goal" aria-label="Цель игры"></button>
+    <button class="spy-dot" data-section="teamwork" aria-label="Командная игра"></button>
+    <button class="spy-dot" data-section="rules" aria-label="Правила"></button>
+    <button class="spy-dot" data-section="punishments" aria-label="Наказания"></button>
+    <button class="spy-dot" data-section="faq" aria-label="FAQ"></button>
+    <button class="spy-dot" data-section="reviews" aria-label="Отзывы"></button>
+    <button class="spy-dot" data-section="join" aria-label="Присоединиться"></button>
+  </nav>
 
-  <!-- Модальное окно (для копирования IP) -->
-  <div id="modal-overlay">
+  <!-- Модальное окно -->
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-label="IP скопирован">
     <div id="modal-content">
       <i data-lucide="check-circle" class="w-12 h-12 text-green-500 mx-auto mb-4"></i>
       <h3 class="text-xl font-semibold mb-2">IP скопирован!</h3>
@@ -639,26 +611,27 @@
   </div>
 
   <!-- Scroll Progress Bar -->
-  <div id="scroll-progress"></div>
+  <div id="scroll-progress" aria-hidden="true"></div>
 
   <!-- Scroll-to-top Button -->
   <button id="scroll-top" aria-label="Наверх">
     <i data-lucide="chevron-up" class="w-5 h-5"></i>
   </button>
 
+  <!-- ═══════════ HEADER ═══════════ -->
   <header id="main-header" class="fixed top-0 left-0 right-0 z-50">
     <div class="max-w-6xl mx-auto px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         <!-- Logo -->
         <a href="#hero" class="flex items-center gap-3 group">
-          <div class="w-9 h-9 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-[#FF6B35]/30" style="background:#FF6B35;">
+          <div class="w-9 h-9 flex items-center justify-center bg-[#FF6B35] transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-[#FF6B35]/30">
             <span class="text-white font-bold text-sm font-mono">EW</span>
           </div>
           <span class="text-white font-bold tracking-widest text-sm uppercase font-mono group-hover:text-[#FF6B35] transition-colors duration-300">EpicWars</span>
         </a>
 
         <!-- Desktop Nav -->
-        <nav class="hidden lg:flex items-center gap-10">
+        <nav class="hidden lg:flex items-center gap-10" aria-label="Основная навигация">
           <a href="#goal" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white" data-section="goal">Цель игры</a>
           <a href="#rules" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white" data-section="rules">Правила</a>
           <a href="#punishments" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white" data-section="punishments">Наказания</a>
@@ -666,7 +639,7 @@
           <a href="#join" class="btn-primary bg-white text-black px-6 py-2.5 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all duration-300 rounded-sm">Играть</a>
         </nav>
 
-        <!-- Burger + Кнопка поделиться (мобильная) -->
+        <!-- Mobile controls -->
         <div class="flex items-center gap-3">
           <button class="share-btn p-2 text-white/70 hover:text-white lg:hidden" onclick="shareSite()" aria-label="Поделиться">
             <i data-lucide="share-2" class="w-5 h-5"></i>
@@ -681,7 +654,7 @@
     <!-- Mobile Menu (Drawer) -->
     <div id="mobile-menu" class="closed">
       <div class="drawer-content">
-        <button class="absolute top-4 right-4 text-white" onclick="toggleMenu(true)">
+        <button class="absolute top-4 right-4 text-white" aria-label="Закрыть меню" onclick="toggleMenu(true)">
           <i data-lucide="x" class="w-6 h-6"></i>
         </button>
         <nav class="flex flex-col gap-5 mt-12">
@@ -700,16 +673,16 @@
     </div>
   </header>
 
-  <!-- HERO с частицами (Canvas) -->
-  <section id="hero" class="min-h-screen flex items-center justify-center px-6 relative" style="background:var(--bg-dark);">
-    <canvas id="particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
-    <div class="hero-grid absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 60px 60px;"></div>
+  <!-- ═══════════ HERO ═══════════ -->
+  <section id="hero" class="min-h-screen flex items-center justify-center px-6 relative bg-[var(--bg-dark)]">
+    <canvas id="particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true"></canvas>
+    <div class="hero-grid absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 60px 60px;" aria-hidden="true"></div>
 
     <div class="max-w-5xl text-center relative z-10">
       <p class="font-mono text-xs uppercase tracking-[0.4em] text-white/30 mb-10 fade-in" data-delay="1">Minecraft · Java 1.21.1 · Командный режим</p>
 
-      <h1 class="font-serif font-normal tracking-tight leading-[0.88] text-white fade-in" data-delay="2" style="font-size: clamp(3.5rem, 11vw, 9rem); font-family:'DM Serif Display',serif;">
-        Эпичное<br><em style="color:var(--accent);">противо</em>стояние
+      <h1 class="font-serif font-normal tracking-tight leading-[0.88] text-white fade-in" data-delay="2" style="font-size: clamp(3.5rem, 11vw, 9rem);">
+        Эпичное<br><em class="accent-color not-italic">противо</em>стояние
       </h1>
 
       <p class="mt-10 text-base text-white/40 font-light max-w-lg mx-auto leading-relaxed fade-in" data-delay="3">
@@ -725,27 +698,27 @@
         </a>
       </div>
 
-      <!-- Stats row -->
+      <!-- Stats -->
       <div class="mt-20 flex flex-col sm:flex-row justify-center gap-12 sm:gap-16 fade-in" data-delay="5">
         <div class="group">
-          <p class="font-serif text-4xl text-white counter-num group-hover:text-[#FF6B35] transition-colors" data-target="4" style="font-family:'DM Serif Display',serif;">0</p>
+          <p class="font-serif text-4xl text-white counter-num group-hover:text-[#FF6B35] transition-colors" data-target="4">0</p>
           <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Базы команды</p>
         </div>
-        <div class="hidden sm:block w-px bg-white/10"></div>
+        <div class="hidden sm:block w-px bg-white/10" aria-hidden="true"></div>
         <div class="group">
-          <p class="font-serif text-4xl text-white counter-num group-hover:text-[#FF6B35] transition-colors" data-target="2" style="font-family:'DM Serif Display',serif;">0</p>
+          <p class="font-serif text-4xl text-white counter-num group-hover:text-[#FF6B35] transition-colors" data-target="2">0</p>
           <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Команды</p>
         </div>
-        <div class="hidden sm:block w-px bg-white/10"></div>
+        <div class="hidden sm:block w-px bg-white/10" aria-hidden="true"></div>
         <div class="group">
-          <p class="font-serif text-4xl counter-num" data-target="1" style="font-family:'DM Serif Display',serif;">0</p>
+          <p class="font-serif text-4xl counter-num" data-target="1">0</p>
           <p class="font-mono text-xs text-white/30 uppercase tracking-widest mt-1">Победитель</p>
         </div>
       </div>
     </div>
 
     <!-- Scroll indicator -->
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 fade-in" data-delay="5">
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 fade-in" data-delay="5" aria-hidden="true">
       <span class="font-mono text-[10px] uppercase tracking-widest text-white/20">Scroll</span>
       <div class="w-5 h-8 border border-white/15 rounded-full flex justify-center pt-1.5">
         <div class="w-1 h-2 bg-white/30 rounded-full animate-bounce"></div>
@@ -753,12 +726,12 @@
     </div>
   </section>
 
-  <!-- GOAL -->
-  <section id="goal" class="py-32 lg:py-40 px-6" style="background:var(--bg-dark);">
+  <!-- ═══════════ GOAL ═══════════ -->
+  <section id="goal" class="py-32 lg:py-40 px-6 bg-[var(--bg-dark)]">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in-up mb-20">
+      <div class="fade-in mb-20">
         <span class="badge mb-6 block w-fit">Цель игры</span>
-        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:700px;">
+        <h2 class="font-serif font-normal tracking-tight text-white max-w-[700px]" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
           Три задачи до победы
         </h2>
       </div>
@@ -768,8 +741,8 @@
         <div class="rule-card pt-10 pb-10 pr-8 slide-in-left" data-delay="1">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">01</span>
-            <div class="w-10 h-10 flex items-center justify-center border border-white/10 transition-all hover:border-[#FF6B35]/50">
-              <i data-lucide="zap" class="w-5 h-5" style="color:#FF6B35;"></i>
+            <div class="icon-box">
+              <i data-lucide="zap" class="w-5 h-5 accent-color"></i>
             </div>
           </div>
           <h3 class="text-xl font-semibold text-white mb-3">Взорви все базы</h3>
@@ -780,11 +753,11 @@
         </div>
 
         <!-- Step 2 -->
-        <div class="rule-card pt-10 pb-10 px-8 fade-in-up" data-delay="2" style="border-left: 1px solid rgba(255,255,255,0.08);">
+        <div class="rule-card pt-10 pb-10 px-8 fade-in" data-delay="2" style="border-left: 1px solid rgba(255,255,255,0.08);">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">02</span>
-            <div class="w-10 h-10 flex items-center justify-center border border-white/10 transition-all hover:border-[#FF6B35]/50">
-              <i data-lucide="flag" class="w-5 h-5" style="color:#FF6B35;"></i>
+            <div class="icon-box">
+              <i data-lucide="flag" class="w-5 h-5 accent-color"></i>
             </div>
           </div>
           <h3 class="text-xl font-semibold text-white mb-3">Захвати флаг</h3>
@@ -798,8 +771,8 @@
         <div class="rule-card pt-10 pb-10 pl-8 slide-in-right" data-delay="3" style="border-left: 1px solid rgba(255,255,255,0.08);">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">03</span>
-            <div class="w-10 h-10 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.4);">
-              <i data-lucide="trophy" class="w-5 h-5" style="color:#FF6B35;"></i>
+            <div class="icon-box accent-border">
+              <i data-lucide="trophy" class="w-5 h-5 accent-color"></i>
             </div>
           </div>
           <h3 class="text-xl font-semibold text-white mb-3">Победа</h3>
@@ -812,12 +785,12 @@
     </div>
   </section>
 
-  <!-- TEAMWORK -->
-  <section id="teamwork" class="py-32 lg:py-40 px-6" style="background:var(--bg-darker);">
+  <!-- ═══════════ TEAMWORK ═══════════ -->
+  <section id="teamwork" class="py-32 lg:py-40 px-6 bg-[var(--bg-darker)]">
     <div class="max-w-6xl mx-auto">
       <div class="fade-in-scale mb-20 text-center">
         <span class="badge mb-6 block w-fit mx-auto">Командная игра</span>
-        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif;">
+        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
           Одиночкам здесь не выжить
         </h2>
         <p class="mt-5 text-white/35 text-base max-w-xl mx-auto leading-relaxed">
@@ -825,48 +798,47 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-white/8 fade-in">
-        <div class="team-card p-8 lg:p-10 border-b sm:border-b lg:border-b-0 border-white/8 sm:border-r">
-          <i data-lucide="trending-up" class="w-6 h-6 mb-6 transition-transform duration-300" style="color:#FF6B35;"></i>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-white/[0.08] fade-in">
+        <div class="team-card p-8 lg:p-10 border-b lg:border-b-0 border-white/[0.08] sm:border-r">
+          <i data-lucide="trending-up" class="w-6 h-6 mb-6 accent-color transition-transform duration-300"></i>
           <h3 class="text-base font-semibold text-white mb-3">Развиваться</h3>
           <p class="text-sm text-white/40 leading-relaxed">Добывайте ресурсы, крафтите броню и оружие. Чем сильнее команда — тем ближе победа.</p>
         </div>
-        <div class="team-card p-8 lg:p-10 border-b sm:border-b lg:border-b-0 border-white/8 lg:border-r">
-          <i data-lucide="shield" class="w-6 h-6 mb-6 transition-transform duration-300" style="color:#FF6B35;"></i>
+        <div class="team-card p-8 lg:p-10 border-b lg:border-b-0 border-white/[0.08] lg:border-r">
+          <i data-lucide="shield" class="w-6 h-6 mb-6 accent-color transition-transform duration-300"></i>
           <h3 class="text-base font-semibold text-white mb-3">Защищать базу</h3>
           <p class="text-sm text-white/40 leading-relaxed">Не давайте разрушить ваши базы. Стройте укрепления, ставьте ловушки, охраняйте флаг.</p>
         </div>
-        <div class="team-card p-8 lg:p-10 border-b lg:border-b-0 border-white/8 sm:border-r">
-          <i data-lucide="users" class="w-6 h-6 mb-6 transition-transform duration-300" style="color:#FF6B35;"></i>
+        <div class="team-card p-8 lg:p-10 border-b lg:border-b-0 border-white/[0.08] sm:border-r">
+          <i data-lucide="users" class="w-6 h-6 mb-6 accent-color transition-transform duration-300"></i>
           <h3 class="text-base font-semibold text-white mb-3">Распределять роли</h3>
           <p class="text-sm text-white/40 leading-relaxed">Разведка, защита тыла, тяжёлая атака. Договаривайтесь и действуйте как единый механизм.</p>
         </div>
         <div class="team-card p-8 lg:p-10">
-          <i data-lucide="crosshair" class="w-6 h-6 mb-6 transition-transform duration-300" style="color:#FF6B35;"></i>
+          <i data-lucide="crosshair" class="w-6 h-6 mb-6 accent-color transition-transform duration-300"></i>
           <h3 class="text-base font-semibold text-white mb-3">Стратегия</h3>
           <p class="text-sm text-white/40 leading-relaxed">Воруй ресурсы врага — это легально. Ослабляй противника, прежде чем идти на финальный штурм.</p>
         </div>
       </div>
 
       <!-- Important note -->
-      <div class="mt-12 p-8 border border-white/8 fade-in glow-border transition-all duration-400 hover:border-[#FF6B35]/40">
+      <div class="mt-12 p-8 border border-white/[0.08] fade-in glow-border transition-all duration-300 hover:border-[#FF6B35]/40">
         <div class="flex flex-col sm:flex-row gap-6 items-start">
           <i data-lucide="info" class="w-5 h-5 text-white/30 mt-0.5 flex-shrink-0"></i>
-          <div>
-            <p class="text-sm text-white/50 leading-relaxed">
-              <span class="text-white font-medium">Важно:</span> Игра идёт до тех пор, пока одна из команд не выполнит все условия победы. Воровать ресурсы у врага в рамках конфликта — <span style="color:#FF6B35;">нормальная тактика</span>. Носитель флага должен быть прикрыт командой — враги будут охотиться за ним.
-            </p>
-          </div>
+          <p class="text-sm text-white/50 leading-relaxed">
+            <span class="text-white font-medium">Важно:</span> Игра идёт до тех пор, пока одна из команд не выполнит все условия победы. Воровать ресурсы у врага в рамках конфликта — <span class="accent-color">нормальная тактика</span>. Носитель флага должен быть прикрыт командой — враги будут охотиться за ним.
+          </p>
         </div>
       </div>
     </div>
   </section>
-    <!-- RULES (полностью сохранённый текст, только добавлены классы анимаций) -->
-  <section id="rules" class="py-32 lg:py-40 px-6" style="background:var(--bg-dark);">
+
+  <!-- ═══════════ RULES ═══════════ -->
+  <section id="rules" class="py-32 lg:py-40 px-6 bg-[var(--bg-dark)]">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in-up mb-20">
+      <div class="fade-in mb-20">
         <span class="badge mb-6 block w-fit">Правила сервера</span>
-        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:650px;">
+        <h2 class="font-serif font-normal tracking-tight text-white max-w-[650px]" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
           Обязательно к прочтению
         </h2>
         <p class="mt-5 text-white/35 text-base max-w-xl leading-relaxed">
@@ -880,15 +852,15 @@
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
               <div class="flex items-center gap-4 mb-3">
-                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 1</span>
+                <span class="section-label">Раздел 1</span>
                 <i data-lucide="message-square" class="w-4 h-4 text-white/25"></i>
               </div>
               <h3 class="text-xl font-semibold text-white lg:w-48">Общение и культура в чате</h3>
             </div>
             <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div class="flex gap-3">
-                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
-                  <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
+                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                  <span class="text-xs font-mono accent-color">✕</span>
                 </div>
                 <div>
                   <p class="text-sm font-medium text-white mb-1">Мат запрещён</p>
@@ -896,8 +868,8 @@
                 </div>
               </div>
               <div class="flex gap-3">
-                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
-                  <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
+                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                  <span class="text-xs font-mono accent-color">✕</span>
                 </div>
                 <div>
                   <p class="text-sm font-medium text-white mb-1">Оскорбления</p>
@@ -905,7 +877,7 @@
                 </div>
               </div>
               <div class="flex gap-3">
-                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(239,68,68,0.4);">
+                <div class="check-box" style="border:1px solid rgba(239,68,68,0.4);">
                   <span class="text-xs font-mono text-red-400">!!!</span>
                 </div>
                 <div>
@@ -914,8 +886,8 @@
                 </div>
               </div>
               <div class="flex gap-3">
-                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
-                  <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
+                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                  <span class="text-xs font-mono accent-color">✕</span>
                 </div>
                 <div>
                   <p class="text-sm font-medium text-white mb-1">Спам и флуд</p>
@@ -931,15 +903,15 @@
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
               <div class="flex items-center gap-4 mb-3">
-                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 2</span>
-                <i data-lucide="sword" class="w-4 h-4 text-white/25"></i>
+                <span class="section-label">Раздел 2</span>
+                <i data-lucide="swords" class="w-4 h-4 text-white/25"></i>
               </div>
               <h3 class="text-xl font-semibold text-white lg:w-48">PvP и взаимодействие</h3>
             </div>
             <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div class="flex gap-3">
-                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);">
-                  <span class="text-xs font-mono" style="color:#FF6B35;">✕</span>
+                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                  <span class="text-xs font-mono accent-color">✕</span>
                 </div>
                 <div>
                   <p class="text-sm font-medium text-white mb-1">Нейтральный игрок — неприкосновенен</p>
@@ -947,7 +919,7 @@
                 </div>
               </div>
               <div class="flex gap-3">
-                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(74,222,128,0.3);">
+                <div class="check-box" style="border:1px solid rgba(74,222,128,0.3);">
                   <span class="text-xs font-mono text-green-400">✓</span>
                 </div>
                 <div>
@@ -964,7 +936,7 @@
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
               <div class="flex items-center gap-4 mb-3">
-                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 3</span>
+                <span class="section-label">Раздел 3</span>
                 <i data-lucide="map-pin" class="w-4 h-4 text-white/25"></i>
               </div>
               <h3 class="text-xl font-semibold text-white lg:w-48">Мирная зона — Город</h3>
@@ -988,19 +960,19 @@
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
               <div class="flex items-center gap-4 mb-3">
-                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 4</span>
+                <span class="section-label">Раздел 4</span>
                 <i data-lucide="home" class="w-4 h-4 text-white/25"></i>
               </div>
               <h3 class="text-xl font-semibold text-white lg:w-48">Строительство и базы</h3>
             </div>
             <div class="flex-1">
               <div class="flex flex-col sm:flex-row gap-4">
-                <div class="flex-1 p-5 border border-white/8 glow-border transition-all duration-300 hover:border-[#FF6B35]/50">
+                <div class="flex-1 p-5 border border-white/[0.08] glow-border transition-all duration-300 hover:border-[#FF6B35]/50">
                   <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Основная база</p>
                   <p class="text-2xl font-semibold text-white mb-1">1 штука</p>
                   <p class="text-sm text-white/40">До 75 × 75 блоков</p>
                 </div>
-                <div class="flex-1 p-5 border border-white/8 glow-border transition-all duration-300 hover:border-[#FF6B35]/50">
+                <div class="flex-1 p-5 border border-white/[0.08] glow-border transition-all duration-300 hover:border-[#FF6B35]/50">
                   <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Мини-базы</p>
                   <p class="text-2xl font-semibold text-white mb-1">До 3 штук</p>
                   <p class="text-sm text-white/40">До 45 × 45 блоков каждая</p>
@@ -1015,18 +987,22 @@
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
               <div class="flex items-center gap-4 mb-3">
-                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 5</span>
+                <span class="section-label">Раздел 5</span>
                 <i data-lucide="package" class="w-4 h-4 text-white/25"></i>
               </div>
               <h3 class="text-xl font-semibold text-white lg:w-48">Общественный склад</h3>
             </div>
             <div class="flex-1 space-y-4">
               <div class="flex gap-3">
-                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(74,222,128,0.3);"><span class="text-xs font-mono text-green-400">✓</span></div>
+                <div class="check-box" style="border:1px solid rgba(74,222,128,0.3);">
+                  <span class="text-xs font-mono text-green-400">✓</span>
+                </div>
                 <p class="text-sm text-white/40 leading-relaxed">Лимит: не больше 1 стака (64 шт.) одного типа ресурса в сутки. Можно взять 64 булыжника И 64 дерева, но нельзя 128 булыжника.</p>
               </div>
               <div class="flex gap-3">
-                <div class="w-5 h-5 flex-shrink-0 mt-0.5 flex items-center justify-center" style="border: 1px solid rgba(255,107,53,0.3);"><span class="text-xs font-mono" style="color:#FF6B35;">✕</span></div>
+                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                  <span class="text-xs font-mono accent-color">✕</span>
+                </div>
                 <p class="text-sm text-white/40 leading-relaxed">Кража со склада строго запрещена. Все операции логируются — администрация найдёт виновного.</p>
               </div>
             </div>
@@ -1038,7 +1014,7 @@
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
               <div class="flex items-center gap-4 mb-3">
-                <span class="font-mono text-xs text-white/25 uppercase tracking-widest">Раздел 6</span>
+                <span class="section-label">Раздел 6</span>
                 <i data-lucide="cpu" class="w-4 h-4 text-white/25"></i>
               </div>
               <h3 class="text-xl font-semibold text-white lg:w-48">Модификации и клиент</h3>
@@ -1047,11 +1023,11 @@
               <div>
                 <p class="font-mono text-xs text-red-400/60 uppercase tracking-widest mb-3">Запрещено</p>
                 <div class="space-y-2">
-                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">X-Ray</p></div>
-                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">Fly (полёт)</p></div>
-                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">KillAura</p></div>
-                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">Автострои и аналоги</p></div>
-                  <div class="flex gap-2 items-center"><span class="font-mono text-xs" style="color:#FF6B35;">✕</span><p class="text-sm text-white/40">Расширения миникарты</p></div>
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs accent-color">✕</span><p class="text-sm text-white/40">X-Ray</p></div>
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs accent-color">✕</span><p class="text-sm text-white/40">Fly (полёт)</p></div>
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs accent-color">✕</span><p class="text-sm text-white/40">KillAura</p></div>
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs accent-color">✕</span><p class="text-sm text-white/40">Автострои и аналоги</p></div>
+                  <div class="flex gap-2 items-center"><span class="font-mono text-xs accent-color">✕</span><p class="text-sm text-white/40">Расширения миникарты</p></div>
                 </div>
               </div>
               <div>
@@ -1067,12 +1043,12 @@
     </div>
   </section>
 
-  <!-- PUNISHMENTS -->
-  <section id="punishments" class="py-32 lg:py-40 px-6" style="background:var(--bg-darker);">
+  <!-- ═══════════ PUNISHMENTS ═══════════ -->
+  <section id="punishments" class="py-32 lg:py-40 px-6 bg-[var(--bg-darker)]">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in-up mb-20">
+      <div class="fade-in mb-20">
         <span class="badge mb-6 block w-fit">Система наказаний</span>
-        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:600px;">
+        <h2 class="font-serif font-normal tracking-tight text-white max-w-[600px]" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
           Три нарушения — и ты вне игры
         </h2>
       </div>
@@ -1080,24 +1056,48 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start fade-in">
         <!-- Steps -->
         <div class="space-y-0">
-          <div class="punish-step flex gap-8 py-8 border-b border-white/8 hover:border-[#FF6B35]/30 transition-colors">
-            <div class="flex-shrink-0 text-center"><p class="font-serif text-5xl text-white/20" style="font-family:'DM Serif Display',serif;">1</p></div>
-            <div class="flex-1"><p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Первое нарушение</p><h3 class="text-xl font-semibold text-white mb-2">Предупреждение</h3><p class="text-sm text-white/40 leading-relaxed">Устно или в чат. Считай это последним шансом исправиться.</p></div>
-            <div class="flex-shrink-0 self-center"><div class="w-3 h-3 bg-yellow-500/60 rounded-full animate-pulse"></div></div>
+          <div class="punish-step flex gap-8 py-8 border-b border-white/[0.08] hover:border-[#FF6B35]/30 transition-colors">
+            <div class="flex-shrink-0 text-center">
+              <p class="font-serif text-5xl text-white/20">1</p>
+            </div>
+            <div class="flex-1">
+              <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Первое нарушение</p>
+              <h3 class="text-xl font-semibold text-white mb-2">Предупреждение</h3>
+              <p class="text-sm text-white/40 leading-relaxed">Устно или в чат. Считай это последним шансом исправиться.</p>
+            </div>
+            <div class="flex-shrink-0 self-center">
+              <div class="w-3 h-3 bg-yellow-500/60 rounded-full animate-pulse"></div>
+            </div>
           </div>
-          <div class="punish-step flex gap-8 py-8 border-b border-white/8 hover:border-[#FF6B35]/30 transition-colors">
-            <div class="flex-shrink-0 text-center"><p class="font-serif text-5xl" style="font-family:'DM Serif Display',serif; color:rgba(255,107,53,0.5);">2</p></div>
-            <div class="flex-1"><p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Второе нарушение</p><h3 class="text-xl font-semibold text-white mb-2">Мут или временный бан</h3><p class="text-sm text-white/40 leading-relaxed">Блокировка чата или временный бан до 1 суток. Время подумать.</p></div>
-            <div class="flex-shrink-0 self-center"><div class="w-3 h-3" style="background:rgba(255,107,53,0.6); border-radius:50%;"></div></div>
+          <div class="punish-step flex gap-8 py-8 border-b border-white/[0.08] hover:border-[#FF6B35]/30 transition-colors">
+            <div class="flex-shrink-0 text-center">
+              <p class="font-serif text-5xl" style="color:rgba(255,107,53,0.5);">2</p>
+            </div>
+            <div class="flex-1">
+              <p class="font-mono text-xs text-white/25 uppercase tracking-widest mb-2">Второе нарушение</p>
+              <h3 class="text-xl font-semibold text-white mb-2">Мут или временный бан</h3>
+              <p class="text-sm text-white/40 leading-relaxed">Блокировка чата или временный бан до 1 суток. Время подумать.</p>
+            </div>
+            <div class="flex-shrink-0 self-center">
+              <div class="w-3 h-3 rounded-full" style="background:rgba(255,107,53,0.6);"></div>
+            </div>
           </div>
           <div class="punish-step flex gap-8 py-8 hover:border-[#FF6B35]/30 transition-colors">
-            <div class="flex-shrink-0 text-center"><p class="font-serif text-5xl" style="font-family:'DM Serif Display',serif; color:#FF6B35;">3</p></div>
-            <div class="flex-1"><p class="font-mono text-xs uppercase tracking-widest mb-2" style="color:rgba(255,107,53,0.4);">Третье нарушение</p><h3 class="text-xl font-semibold text-white mb-2">Перманентный бан</h3><p class="text-sm text-white/40 leading-relaxed">Игрок отстраняется от сервера навсегда. Прецедент закрыт.</p></div>
-            <div class="flex-shrink-0 self-center"><div class="w-3 h-3" style="background:#FF6B35; border-radius:50%;"></div></div>
+            <div class="flex-shrink-0 text-center">
+              <p class="font-serif text-5xl accent-color">3</p>
+            </div>
+            <div class="flex-1">
+              <p class="font-mono text-xs uppercase tracking-widest mb-2" style="color:rgba(255,107,53,0.4);">Третье нарушение</p>
+              <h3 class="text-xl font-semibold text-white mb-2">Перманентный бан</h3>
+              <p class="text-sm text-white/40 leading-relaxed">Игрок отстраняется от сервера навсегда. Прецедент закрыт.</p>
+            </div>
+            <div class="flex-shrink-0 self-center">
+              <div class="w-3 h-3 rounded-full bg-[#FF6B35]"></div>
+            </div>
           </div>
         </div>
 
-        <!-- Simple reminder -->
+        <!-- Reminder -->
         <div>
           <div class="p-6 border border-white/5 bg-white/[0.01] hover:border-[#FF6B35]/30 transition-all duration-300 rounded-sm glow-border">
             <p class="text-xs font-mono text-white/20 uppercase tracking-widest mb-3">Помни</p>
@@ -1110,12 +1110,12 @@
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section id="faq" class="py-32 lg:py-40 px-6" style="background:var(--bg-dark);">
+  <!-- ═══════════ FAQ ═══════════ -->
+  <section id="faq" class="py-32 lg:py-40 px-6 bg-[var(--bg-dark)]">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in-up mb-20">
+      <div class="fade-in mb-20">
         <span class="badge mb-6 block w-fit">Частые вопросы</span>
-        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif; max-width:600px;">
+        <h2 class="font-serif font-normal tracking-tight text-white max-w-[600px]" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
           Есть вопросы?
         </h2>
       </div>
@@ -1140,7 +1140,7 @@
           </button>
           <div class="faq-answer">
             <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-              Нет, это командная игра и по правилам игроки должны быть в командах. 
+              Нет, это командная игра и по правилам игроки должны быть в командах.
             </p>
           </div>
         </div>
@@ -1188,7 +1188,7 @@
           </button>
           <div class="faq-answer">
             <p class="text-sm text-white/40 leading-relaxed pb-7 max-w-2xl">
-              Если вы считаете, что бан был выдан ошибочно, вы можете обратиться к администрации через группу во Вконтакте написав об этом под последним любым постом
+              Если вы считаете, что бан был выдан ошибочно, вы можете обратиться к администрации через группу во Вконтакте, написав об этом под последним постом.
             </p>
           </div>
         </div>
@@ -1196,17 +1196,17 @@
     </div>
   </section>
 
-  <!-- НОВЫЙ БЛОК: Отзывы игроков -->
-  <section id="reviews" class="py-32 lg:py-40 px-6" style="background:var(--bg-darker);">
+  <!-- ═══════════ REVIEWS ═══════════ -->
+  <section id="reviews" class="py-32 lg:py-40 px-6 bg-[var(--bg-darker)]">
     <div class="max-w-6xl mx-auto">
-      <div class="fade-in-up mb-20 text-center">
+      <div class="fade-in-scale mb-20 text-center">
         <span class="badge mb-6 block w-fit mx-auto">Отзывы</span>
-        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-family:'DM Serif Display',serif;">
+        <h2 class="font-serif font-normal tracking-tight text-white" style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
           Что говорят игроки
         </h2>
       </div>
 
-      <div class="reviews-carousel">
+      <div class="reviews-carousel fade-in">
         <div class="review-card">
           <div class="flex items-center gap-2 mb-3">
             <i data-lucide="star" class="w-4 h-4 fill-[#FF6B35] text-[#FF6B35]"></i>
@@ -1255,15 +1255,15 @@
     </div>
   </section>
 
-  <!-- JOIN / CTA (с добавленной кнопкой поделиться) -->
-  <section id="join" class="py-32 lg:py-40 px-6" style="background:var(--bg-darker);">
+  <!-- ═══════════ JOIN / CTA ═══════════ -->
+  <section id="join" class="py-32 lg:py-40 px-6 bg-[var(--bg-dark)]">
     <div class="max-w-4xl mx-auto text-center fade-in">
       <span class="badge mb-8 block w-fit mx-auto">Присоединиться</span>
-      <h2 class="font-serif font-normal tracking-tight text-white mb-6" style="font-size: clamp(2.5rem, 7vw, 5.5rem); font-family:'DM Serif Display',serif;">
+      <h2 class="font-serif font-normal tracking-tight text-white mb-6" style="font-size: clamp(2.5rem, 7vw, 5.5rem);">
         Готов к бою?
       </h2>
       <p class="text-base text-white/35 max-w-md mx-auto leading-relaxed mb-14">
-        Minecraft Java Edition 1.21.11 Подключись прямо сейчас и найди свою команду.
+        Minecraft Java Edition 1.21.1. Подключись прямо сейчас и найди свою команду.
       </p>
 
       <!-- IP Block -->
@@ -1272,39 +1272,39 @@
           <i data-lucide="server" class="w-4 h-4 text-white/30 flex-shrink-0"></i>
           <span id="ip-display" class="text-white text-sm flex-1 text-left font-mono">epicwars.ender-zone.com</span>
         </div>
-        <button id="copy-ip-btn" onclick="copyIP()" class="w-full sm:w-auto bg-white text-black px-7 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all duration-300 border border-white/15 sm:border-l-0 flex items-center justify-center gap-2 rounded-r-sm cursor-pointer">
+        <button id="copy-ip-btn" class="w-full sm:w-auto bg-white text-black px-7 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all duration-300 border border-white/15 sm:border-l-0 flex items-center justify-center gap-2 rounded-r-sm">
           <i data-lucide="copy" class="w-4 h-4"></i>
           <span id="copy-label">Копировать</span>
         </button>
       </div>
 
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="#" target="_blank" class="btn-outline border border-white/15 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center gap-2 rounded-sm">
+        <a href="#" target="_blank" rel="noopener noreferrer" class="btn-outline border border-white/15 text-white px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-white hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center gap-2 rounded-sm">
           <i data-lucide="message-circle" class="w-4 h-4"></i>
           Discord сервер
         </a>
-        <a href="#rules" class="btn-outline border border-white/8 text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-all duration-300 flex items-center justify-center gap-2 rounded-sm">
+        <a href="#rules" class="btn-outline border border-white/[0.08] text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-all duration-300 flex items-center justify-center gap-2 rounded-sm">
           <i data-lucide="book-open" class="w-4 h-4"></i>
           Читать правила
         </a>
-        <button onclick="shareSite()" class="btn-outline border border-white/8 text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-all duration-300 flex items-center justify-center gap-2 rounded-sm share-btn">
+        <button class="btn-outline border border-white/[0.08] text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-all duration-300 flex items-center justify-center gap-2 rounded-sm share-btn" id="share-btn-cta">
           <i data-lucide="share-2" class="w-4 h-4"></i>
           Поделиться
         </button>
       </div>
 
-      <p class="mt-12 font-mono text-xs text-white/15 uppercase tracking-widest">Версия 1.21.11 · Java Edition · Без платного доступа</p>
+      <p class="mt-12 font-mono text-xs text-white/15 uppercase tracking-widest">Версия 1.21.1 · Java Edition · Без платного доступа</p>
     </div>
   </section>
 
-  <!-- FOOTER (с добавленной кнопкой поделиться) -->
+  <!-- ═══════════ FOOTER ═══════════ -->
   <footer>
     <div class="max-w-6xl mx-auto px-6 lg:px-8 py-16">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
         <!-- Brand -->
         <div>
           <div class="flex items-center gap-3 mb-5">
-            <div class="w-9 h-9 flex items-center justify-center" style="background:#FF6B35;">
+            <div class="w-9 h-9 flex items-center justify-center bg-[#FF6B35]">
               <span class="text-white font-bold text-sm font-mono">EW</span>
             </div>
             <span class="text-white font-bold tracking-widest text-sm uppercase font-mono">EpicWars</span>
@@ -1312,8 +1312,8 @@
           <p class="text-sm text-white/40 leading-relaxed max-w-xs">
             Тактическая командная игра. Взрывай базы, захватывай флаги, побеждай.
           </p>
-          <p class="font-mono text-xs text-white/25 mt-4">Версия 1.21.11</p>
-          <button onclick="shareSite()" class="share-btn flex items-center gap-2 text-white/40 hover:text-white mt-4">
+          <p class="font-mono text-xs text-white/25 mt-4">Версия 1.21.1</p>
+          <button class="share-btn flex items-center gap-2 text-white/40 hover:text-white mt-4" id="share-btn-footer">
             <i data-lucide="share-2" class="w-4 h-4"></i>
             <span class="text-xs uppercase tracking-widest">Поделиться сайтом</span>
           </button>
@@ -1322,204 +1322,285 @@
         <!-- Nav -->
         <div>
           <p class="text-xs uppercase tracking-widest text-white/30 mb-5 font-mono">Навигация</p>
-          <nav class="flex flex-col gap-3">
+          <nav class="flex flex-col gap-3" aria-label="Навигация в подвале">
             <a href="#goal" class="text-sm text-white/50 hover:text-white transition-colors">Цель игры</a>
             <a href="#teamwork" class="text-sm text-white/50 hover:text-white transition-colors">Командная игра</a>
             <a href="#rules" class="text-sm text-white/50 hover:text-white transition-colors">Правила</a>
             <a href="#punishments" class="text-sm text-white/50 hover:text-white transition-colors">Наказания</a>
             <a href="#faq" class="text-sm text-white/50 hover:text-white transition-colors">FAQ</a>
-            <a href="#join" class="text-sm text-white/50 hover:text-white transition-colors">Присоединиться</a>
             <a href="#reviews" class="text-sm text-white/50 hover:text-white transition-colors">Отзывы</a>
+            <a href="#join" class="text-sm text-white/50 hover:text-white transition-colors">Присоединиться</a>
           </nav>
         </div>
 
         <!-- Contacts -->
         <div>
           <p class="text-xs uppercase tracking-widest text-white/30 mb-5 font-mono">Контакты</p>
-          <div class="flex flex-col gap-3">
-            <p class="text-sm text-white/50">IP: <span class="font-mono text-white">epicwars.ender-zone.com</span></p>
-          </div>
+          <p class="text-sm text-white/50">IP: <span class="font-mono text-white">epicwars.ender-zone.com</span></p>
         </div>
       </div>
 
       <div class="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
         <p class="text-xs text-white/20 font-mono">© 2024–<span id="footer-year"></span> EpicWars. Все права защищены.</p>
-        <p class="text-xs text-white/20 font-mono">Minecraft 1.21.11 · Java Edition</p>
+        <p class="text-xs text-white/20 font-mono">Minecraft 1.21.1 · Java Edition</p>
       </div>
     </div>
   </footer>
 
   <script>
-    // ── Инициализация Lucide ──
-    lucide.createIcons();
-
-    // ── Кастомный курсор ──
-    const cursor = document.getElementById('custom-cursor');
-    document.addEventListener('mousemove', (e) => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top = e.clientY + 'px';
+    // ═══════════════════════════════════════
+    // Ждём загрузку Lucide (defer) и инициализируем
+    // ═══════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', () => {
+      // Lucide может загрузиться после DOMContentLoaded из-за defer
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+    });
+    // Повторная попытка на случай если скрипт ещё не загрузился
+    window.addEventListener('load', () => {
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      document.body.classList.remove('loading');
+      document.body.classList.add('loaded');
     });
 
-    // ── Мобильное меню (drawer) ──
+    // ═══════════════════════════════════════
+    // Кэшируем DOM-элементы
+    // ═══════════════════════════════════════
+    const cursor = document.getElementById('custom-cursor');
+    const header = document.getElementById('main-header');
+    const scrollProgress = document.getElementById('scroll-progress');
+    const scrollTopBtn = document.getElementById('scroll-top');
+    const heroGrid = document.querySelector('.hero-grid');
     const menuToggle = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const menuIcon = menuToggle?.querySelector('i');
+    const sections = document.querySelectorAll('section[id]');
+    const dots = document.querySelectorAll('.spy-dot');
+    const navLinks = document.querySelectorAll('.nav-link[data-section]');
+    const modalOverlay = document.getElementById('modal-overlay');
 
+    // ═══════════════════════════════════════
+    // Кастомный курсор
+    // ═══════════════════════════════════════
+    if (cursor && window.matchMedia('(min-width: 769px)').matches) {
+      document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+      }, { passive: true });
+
+      // Hover-эффект через делегирование
+      const interactiveSelector = 'a, button, .btn-primary, .btn-outline, .nav-link, .rule-card, .faq-trigger, .share-btn, .spy-dot, .team-card, .review-card';
+
+      document.addEventListener('mouseover', (e) => {
+        if (e.target.closest(interactiveSelector)) {
+          cursor.classList.add('hovering');
+        }
+      }, { passive: true });
+
+      document.addEventListener('mouseout', (e) => {
+        if (e.target.closest(interactiveSelector)) {
+          cursor.classList.remove('hovering');
+        }
+      }, { passive: true });
+    }
+
+    // ═══════════════════════════════════════
+    // Мобильное меню (Drawer)
+    // ═══════════════════════════════════════
     function toggleMenu(forceClose) {
       if (!mobileMenu) return;
-      const isOpen = mobileMenu.classList.contains('opened');
-      if (forceClose) {
-        mobileMenu.classList.remove('opened');
-        mobileMenu.classList.add('closed');
-        if (menuIcon) menuIcon.style.transform = 'rotate(0deg)';
-      } else {
-        if (isOpen) {
-          mobileMenu.classList.remove('opened');
-          mobileMenu.classList.add('closed');
-          if (menuIcon) menuIcon.style.transform = 'rotate(0deg)';
-        } else {
-          mobileMenu.classList.remove('closed');
-          mobileMenu.classList.add('opened');
-          if (menuIcon) menuIcon.style.transform = 'rotate(90deg)';
-        }
-      }
+      const shouldClose = forceClose || mobileMenu.classList.contains('opened');
+
+      mobileMenu.classList.toggle('opened', !shouldClose);
+      mobileMenu.classList.toggle('closed', shouldClose);
+      if (menuIcon) menuIcon.style.transform = shouldClose ? 'rotate(0deg)' : 'rotate(90deg)';
     }
 
     menuToggle?.addEventListener('click', (e) => {
       e.stopPropagation();
       toggleMenu();
     });
-    mobileMenu?.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => toggleMenu(true));
-    });
+
     mobileMenu?.addEventListener('click', (e) => {
-      if (e.target === mobileMenu) toggleMenu(true);
+      // Закрытие при клике на оверлей или на ссылку
+      if (e.target === mobileMenu || e.target.closest('a')) {
+        toggleMenu(true);
+      }
     });
 
-    // ── Параллакс-частицы (Canvas) ──
+    // ═══════════════════════════════════════
+    // Частицы на Canvas (оптимизированные)
+    // ═══════════════════════════════════════
     const canvas = document.getElementById('particle-canvas');
     if (canvas) {
       const ctx = canvas.getContext('2d');
-      let width, height;
       let particles = [];
+      let canvasW, canvasH;
+      const PARTICLE_COUNT = 50;
 
       function initParticles() {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
-        particles = [];
-        for (let i = 0; i < 50; i++) {
-          particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            size: Math.random() * 2 + 1,
-            speedX: (Math.random() - 0.5) * 0.5,
-            speedY: (Math.random() - 0.5) * 0.5,
-          });
-        }
+        canvasW = canvas.width = window.innerWidth;
+        canvasH = canvas.height = window.innerHeight;
+        particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+          x: Math.random() * canvasW,
+          y: Math.random() * canvasH,
+          size: Math.random() * 2 + 1,
+          speedX: (Math.random() - 0.5) * 0.5,
+          speedY: (Math.random() - 0.5) * 0.5,
+          alpha: Math.random() * 0.3 + 0.2, // Фиксированная прозрачность — нет мерцания
+        }));
       }
 
-      function drawParticles() {
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach(p => {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 107, 53, ${Math.random() * 0.3 + 0.2})`;
-          ctx.fill();
-        });
-      }
-
-      function updateParticles() {
-        particles.forEach(p => {
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvasW, canvasH);
+        for (const p of particles) {
           p.x += p.speedX;
           p.y += p.speedY;
-          if (p.x < 0) p.x = width;
-          if (p.x > width) p.x = 0;
-          if (p.y < 0) p.y = height;
-          if (p.y > height) p.y = 0;
-        });
-        drawParticles();
-        requestAnimationFrame(updateParticles);
+
+          // Зацикливание
+          if (p.x < 0) p.x = canvasW;
+          else if (p.x > canvasW) p.x = 0;
+          if (p.y < 0) p.y = canvasH;
+          else if (p.y > canvasH) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 107, 53, ${p.alpha})`;
+          ctx.fill();
+        }
+        requestAnimationFrame(animateParticles);
       }
 
-      window.addEventListener('resize', initParticles);
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(initParticles, 200);
+      }, { passive: true });
+
       initParticles();
-      updateParticles();
+      animateParticles();
     }
 
-    // ── Прогресс-бар условий (псевдо) ──
-    const progressBar = document.getElementById('progress-bar-fill');
-    let progress = 0;
-    setInterval(() => {
-      progress = (progress + 1) % 101;
-      progressBar.style.width = progress + '%';
-    }, 200);
+    // ═══════════════════════════════════════
+    // Единый обработчик scroll (вместо 5 отдельных)
+    // ═══════════════════════════════════════
+    let scrollTicking = false;
 
-    // ── Навигационные точки (scroll spy) ──
-    const sections = document.querySelectorAll('section[id]');
-    const dots = document.querySelectorAll('.spy-dot');
-    function updateSpy() {
-      const scrollY = window.scrollY + 120;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(handleScroll);
+        scrollTicking = true;
+      }
+    }, { passive: true });
+
+    function handleScroll() {
+      const scrollY = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+      // 1. Header state
+      header.classList.toggle('scrolled', scrollY > 60);
+
+      // 2. Scroll progress bar
+      const scrollPercent = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+      scrollProgress.style.width = scrollPercent + '%';
+
+      // 3. Scroll-to-top button
+      scrollTopBtn.classList.toggle('visible', scrollY > 500);
+
+      // 4. Active section (scroll spy + nav links)
+      const checkY = scrollY + 120;
       let currentSection = '';
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-          currentSection = section.getAttribute('id');
+      for (const section of sections) {
+        const top = section.offsetTop;
+        if (checkY >= top && checkY < top + section.offsetHeight) {
+          currentSection = section.id;
+          break;
         }
-      });
-      dots.forEach(dot => {
-        dot.classList.toggle('active', dot.dataset.section === currentSection);
-      });
+      }
+      dots.forEach(d => d.classList.toggle('active', d.dataset.section === currentSection));
+      navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === currentSection));
+
+      // 5. Hero parallax
+      if (heroGrid && scrollY < window.innerHeight) {
+        heroGrid.style.transform = `translateY(${scrollY * 0.3}px)`;
+      }
+
+      scrollTicking = false;
     }
-    window.addEventListener('scroll', updateSpy);
+
+    // ═══════════════════════════════════════
+    // Scroll spy dots — click handler
+    // ═══════════════════════════════════════
     dots.forEach(dot => {
       dot.addEventListener('click', () => {
-        const section = document.getElementById(dot.dataset.section);
-        if (section) {
-          window.scrollTo({ top: section.offsetTop - 80, behavior: 'smooth' });
+        const target = document.getElementById(dot.dataset.section);
+        if (target) {
+          window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
         }
       });
     });
 
-    // ── Модальное окно при копировании IP ──
-    const modalOverlay = document.getElementById('modal-overlay');
+    // ═══════════════════════════════════════
+    // Scroll-to-top
+    // ═══════════════════════════════════════
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ═══════════════════════════════════════
+    // Модальное окно
+    // ═══════════════════════════════════════
     function showModal() {
       modalOverlay.classList.add('active');
-      // Опционально: звук (закомментировано)
-      // new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3').play().catch(()=>{});
     }
-    window.closeModal = function() {
+
+    function closeModal() {
       modalOverlay.classList.remove('active');
-    };
-
-    // Копирование IP с модалкой
-    function copyIP() {
-      const ip = 'epicwars.ender-zone.com';
-      const label = document.getElementById('copy-label');
-      navigator.clipboard.writeText(ip).then(() => {
-        label.textContent = 'Скопировано!';
-        showModal();
-        setTimeout(() => {
-          label.textContent = 'Копировать';
-        }, 2000);
-      }).catch(() => {
-        const el = document.createElement('textarea');
-        el.value = ip;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        label.textContent = 'Скопировано!';
-        showModal();
-        setTimeout(() => label.textContent = 'Копировать', 2000);
-      });
     }
-    window.copyIP = copyIP;
+    window.closeModal = closeModal;
 
-    // ── Поделиться сайтом ──
-    window.shareSite = function() {
+    // Закрытие по клику на оверлей
+    modalOverlay?.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    // Закрытие по Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    // ═══════════════════════════════════════
+    // Копирование IP
+    // ═══════════════════════════════════════
+    const copyBtn = document.getElementById('copy-ip-btn');
+    const copyLabel = document.getElementById('copy-label');
+    const SERVER_IP = 'epicwars.ender-zone.com';
+
+    copyBtn?.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(SERVER_IP);
+      } catch {
+        // Fallback для старых браузеров
+        const textarea = document.createElement('textarea');
+        textarea.value = SERVER_IP;
+        textarea.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
+      copyLabel.textContent = 'Скопировано!';
+      showModal();
+      setTimeout(() => { copyLabel.textContent = 'Копировать'; }, 2000);
+    });
+
+    // ═══════════════════════════════════════
+    // Поделиться сайтом
+    // ═══════════════════════════════════════
+    function shareSite() {
       if (navigator.share) {
         navigator.share({
           title: 'EpicWars Minecraft Server',
@@ -1529,135 +1610,92 @@
       } else {
         navigator.clipboard.writeText(window.location.href).then(() => {
           alert('Ссылка скопирована!');
-        });
+        }).catch(() => {});
       }
-    };
+    }
 
-    // ── Год в футере ──
+    // Привязка share кнопок через делегирование
+    document.querySelectorAll('.share-btn, [onclick="shareSite()"]').forEach(btn => {
+      btn.removeAttribute('onclick');
+      btn.addEventListener('click', shareSite);
+    });
+
+    // ═══════════════════════════════════════
+    // Год в футере
+    // ═══════════════════════════════════════
     document.getElementById('footer-year').textContent = new Date().getFullYear();
 
-    // ── Intersection Observer для анимаций ──
-    const animatedElements = document.querySelectorAll('.fade-in, .fade-in-up, .fade-in-scale, .slide-in-left, .slide-in-right');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+    // ═══════════════════════════════════════
+    // Intersection Observer для анимаций
+    // ═══════════════════════════════════════
+    const animObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          animObserver.unobserve(entry.target); // Не наблюдаем после появления
         }
-      });
+      }
     }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
-    animatedElements.forEach(el => observer.observe(el));
 
-    // ── Счётчики (анимация при наведении) ──
-    const counters = document.querySelectorAll('.counter-num');
-    counters.forEach(counter => {
-      const target = parseInt(counter.getAttribute('data-target') || '0');
+    document.querySelectorAll('.fade-in, .fade-in-up, .fade-in-scale, .slide-in-left, .slide-in-right')
+      .forEach(el => animObserver.observe(el));
+
+    // ═══════════════════════════════════════
+    // Счётчики (анимация при наведении)
+    // ═══════════════════════════════════════
+    document.querySelectorAll('.counter-num').forEach(counter => {
+      const target = parseInt(counter.dataset.target) || 0;
+      let timer = null;
+
       counter.addEventListener('mouseenter', () => {
+        if (timer) clearInterval(timer); // Предотвращаем наложение
         let current = 0;
-        const increment = target / 20;
-        const timer = setInterval(() => {
+        const increment = Math.max(target / 20, 1);
+        timer = setInterval(() => {
           current += increment;
           if (current >= target) {
             current = target;
             clearInterval(timer);
+            timer = null;
           }
           counter.textContent = Math.round(current);
         }, 30);
       });
+
       counter.addEventListener('mouseleave', () => {
+        if (timer) { clearInterval(timer); timer = null; }
         counter.textContent = target;
       });
     });
 
-    // ── Header scroll state ──
-    const header = document.getElementById('main-header');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 60) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
-    });
-
-    // ── Scroll Progress Bar (оригинальный) ──
-    const scrollProgress = document.getElementById('scroll-progress');
-    window.addEventListener('scroll', () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      scrollProgress.style.width = scrollPercent + '%';
-    });
-
-    // ── Scroll-to-top Button ──
-    const scrollTopBtn = document.getElementById('scroll-top');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 500) {
-        scrollTopBtn.classList.add('visible');
-      } else {
-        scrollTopBtn.classList.remove('visible');
-      }
-    });
-    scrollTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // ── Active Nav Link ──
-    const navLinks = document.querySelectorAll('.nav-link[data-section]');
-    function updateActiveNav() {
-      const scrollY = window.scrollY + 120;
-      let currentSection = '';
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.offsetHeight;
-        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-          currentSection = section.getAttribute('id');
-        }
-      });
-      navLinks.forEach(link => {
-        link.classList.toggle('active', link.getAttribute('data-section') === currentSection);
-      });
-    }
-    window.addEventListener('scroll', updateActiveNav);
-
-    // ── FAQ Accordion ──
+    // ═══════════════════════════════════════
+    // FAQ Accordion
+    // ═══════════════════════════════════════
     document.querySelectorAll('.faq-trigger').forEach(btn => {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', function () {
         const card = this.closest('.rule-card');
         const answer = card.querySelector('.faq-answer');
         const icon = card.querySelector('.faq-icon');
         const isOpen = answer.classList.contains('open');
 
-        document.querySelectorAll('.faq-answer').forEach(a => {
+        // Закрыть все
+        document.querySelectorAll('.faq-answer.open').forEach(a => {
           a.classList.remove('open');
           a.style.maxHeight = '0px';
         });
-        document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('rotated'));
-        document.querySelectorAll('.faq-trigger').forEach(t => t.setAttribute('aria-expanded', 'false'));
+        document.querySelectorAll('.faq-icon.rotated').forEach(i => i.classList.remove('rotated'));
+        document.querySelectorAll('.faq-trigger[aria-expanded="true"]').forEach(t => t.setAttribute('aria-expanded', 'false'));
 
+        // Открыть текущий (если был закрыт)
         if (!isOpen) {
           answer.classList.add('open');
           answer.style.maxHeight = answer.scrollHeight + 'px';
-          if (icon) icon.classList.add('rotated');
+          icon?.classList.add('rotated');
           this.setAttribute('aria-expanded', 'true');
         }
       });
     });
-
-    // ── Subtle parallax on hero grid ──
-    const heroGrid = document.querySelector('.hero-grid');
-    if (heroGrid) {
-      window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
-        if (scrollY < window.innerHeight) {
-          heroGrid.style.transform = `translateY(${scrollY * 0.3}px)`;
-        }
-      }, { passive: true });
-    }
-
-    // ── Убираем класс loading после загрузки страницы ──
-    window.addEventListener('load', () => {
-      document.body.classList.remove('loading');
-      document.body.classList.add('loaded');
-    });
   </script>
 </body>
 </html>
+```
