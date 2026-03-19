@@ -11,7 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@0.469.0" defer></script>
   <style>
-    /* ── CSS Variables ── */
     :root {
       --accent: #FF6B35;
       --accent-light: #FFA07A;
@@ -41,7 +40,6 @@
     .font-serif { font-family: 'DM Serif Display', serif; }
     .font-mono  { font-family: 'IBM Plex Mono', monospace; }
 
-    /* ── Кастомный курсор (только desktop) ── */
     @media (min-width: 769px) {
       body { cursor: none; }
       a, button, input, textarea, select,
@@ -76,7 +74,6 @@
       #custom-cursor { display: none; }
     }
 
-    /* ── Scroll Progress Bar ── */
     #scroll-progress {
       position: fixed;
       top: 0; left: 0;
@@ -88,7 +85,6 @@
       pointer-events: none;
     }
 
-    /* ── Scroll-to-top Button ── */
     #scroll-top {
       position: fixed;
       bottom: 32px;
@@ -119,7 +115,6 @@
       transform: translateY(-3px) scale(1.05);
     }
 
-    /* ── Badge ── */
     .badge {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 0.6875rem;
@@ -136,7 +131,6 @@
       background: rgba(255,107,53,0.06);
     }
 
-    /* ── Header ── */
     #main-header {
       transition: background 0.4s ease, backdrop-filter 0.4s ease, box-shadow 0.3s ease;
       background: rgba(17, 17, 17, 0.6);
@@ -173,7 +167,6 @@
     }
     .nav-link.active { color: #fff; }
 
-    /* ── Mobile Menu (Drawer) ── */
     #mobile-menu {
       position: fixed;
       inset: 0;
@@ -207,7 +200,6 @@
       transform: translateX(0);
     }
 
-    /* ── Hero ── */
     #hero {
       position: relative;
       overflow: hidden;
@@ -226,11 +218,8 @@
       0%   { transform: scale(1) translate(0, 0); opacity: 0.5; }
       100% { transform: scale(1.2) translate(-3%, -3%); opacity: 0.9; }
     }
-    .hero-grid {
-      will-change: transform;
-    }
+    .hero-grid { will-change: transform; }
 
-    /* ── Fade-in Animations (объединённые) ── */
     .fade-in,
     .fade-in-up {
       opacity: 0;
@@ -271,7 +260,6 @@
     .fade-in[data-delay="5"],
     .fade-in-up[data-delay="5"] { transition-delay: 0.5s; }
 
-    /* ── Rule Cards ── */
     .rule-card {
       border-top: 1px solid rgba(255,255,255,0.08);
       transition: border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
@@ -284,7 +272,6 @@
       background: rgba(255,107,53,0.015);
     }
 
-    /* ── Icons ── */
     .rule-card i,
     .punish-step i,
     .fade-in i {
@@ -293,7 +280,6 @@
     .rule-card:hover i { transform: scale(1.1); }
     .punish-step:hover i { transform: scale(1.1); color: var(--accent); }
 
-    /* ── FAQ Accordion ── */
     .faq-answer {
       max-height: 0;
       overflow: hidden;
@@ -317,7 +303,6 @@
     .faq-trigger:hover i { color: var(--accent); }
     .faq-icon.rotated { transform: rotate(45deg) scale(1.1); }
 
-    /* ── Counter Numbers ── */
     .counter-num {
       font-family: 'DM Serif Display', serif;
       font-size: clamp(3rem, 8vw, 5rem);
@@ -330,7 +315,6 @@
       transform: scale(1.05);
     }
 
-    /* ── Copy IP Button ── */
     #copy-ip-btn { position: relative; }
     #copy-ip-btn::after {
       content: '';
@@ -347,7 +331,6 @@
       100% { transform: scale(0.8); opacity: 0.6; box-shadow: 0 0 0 0 rgba(74,222,128,0); }
     }
 
-    /* ── Buttons & Links ── */
     .btn-primary, .btn-outline {
       position: relative;
       overflow: hidden;
@@ -370,13 +353,11 @@
     .btn-primary:hover, .btn-outline:hover { transform: translateY(-2px); }
     .btn-primary:active, .btn-outline:active { transform: translateY(0); }
 
-    /* ── Punish Steps ── */
     .punish-step {
       transition: border-color 0.3s ease, background 0.3s ease;
     }
     .punish-step:hover { background: rgba(255,107,53,0.02); }
 
-    /* ── Teamwork Cards ── */
     .team-card {
       transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     }
@@ -386,7 +367,6 @@
     }
     .team-card:hover i { transform: scale(1.15) rotate(-5deg); }
 
-    /* ── Footer ── */
     footer {
       border-top: 1px solid rgba(255,107,53,0.15);
       background: var(--bg-darkest);
@@ -394,24 +374,22 @@
     footer a { transition: color 0.3s ease; }
     footer a:hover { color: var(--accent); }
 
-    /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg-dark); }
     ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: #ff824d; }
 
-    /* ── Focus visible ── */
     a:focus-visible, button:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 3px;
       border-radius: 2px;
     }
 
-    /* ── Page load animation ── */
-    body.loading > *:not(#scroll-progress):not(#custom-cursor) {
+    /* ══ ИСПРАВЛЕННАЯ анимация загрузки ══ */
+    body.loading > *:not(#scroll-progress):not(#custom-cursor):not(#modal-overlay):not(#scroll-spy) {
       opacity: 0;
     }
-    body.loaded > * {
+    body.loaded > *:not(#scroll-progress):not(#custom-cursor):not(#modal-overlay):not(#scroll-spy) {
       animation: pageIn 0.6s ease forwards;
     }
     @keyframes pageIn {
@@ -419,15 +397,12 @@
       to   { opacity: 1; }
     }
 
-    /* ── Glow border ── */
     .glow-border:hover {
       box-shadow: 0 0 0 1px rgba(255,107,53,0.3), 0 8px 25px -5px rgba(255,107,53,0.15);
     }
 
-    /* ── Accent utilities ── */
     .accent-color { color: var(--accent); }
     .accent-border { border-color: rgba(255,107,53,0.3); }
-    .accent-border-hover:hover { border-color: rgba(255,107,53,0.5); }
     .icon-box {
       width: 2.5rem;
       height: 2.5rem;
@@ -455,7 +430,6 @@
       justify-content: center;
     }
 
-    /* ── Карусель отзывов ── */
     .reviews-carousel {
       display: flex;
       overflow-x: auto;
@@ -483,7 +457,7 @@
       box-shadow: 0 10px 30px -10px rgba(255,107,53,0.3);
     }
 
-    /* ── Модальное окно ── */
+    /* ══ Модальное окно — скрыто по умолчанию ══ */
     #modal-overlay {
       position: fixed;
       inset: 0;
@@ -494,11 +468,13 @@
       align-items: center;
       justify-content: center;
       opacity: 0;
+      visibility: hidden;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
     #modal-overlay.active {
       opacity: 1;
+      visibility: visible;
       pointer-events: auto;
     }
     #modal-content {
@@ -515,7 +491,6 @@
       transform: scale(1);
     }
 
-    /* ── Навигационные точки ── */
     #scroll-spy {
       position: fixed;
       right: 20px;
@@ -544,11 +519,9 @@
       #scroll-spy { display: none; }
     }
 
-    /* ── Кнопка поделиться ── */
     .share-btn { transition: all 0.3s ease; }
     .share-btn:hover { color: var(--accent); transform: scale(1.1); }
 
-    /* ── Responsive ── */
     @media (max-width: 640px) {
       #scroll-top { bottom: 20px; right: 20px; width: 40px; height: 40px; }
     }
@@ -556,14 +529,12 @@
 </head>
 <body class="loading">
 
-  <!-- Кастомный курсор -->
   <div id="custom-cursor" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
     </svg>
   </div>
 
-  <!-- Навигационные точки -->
   <nav id="scroll-spy" aria-label="Навигация по секциям">
     <button class="spy-dot" data-section="hero" aria-label="К началу"></button>
     <button class="spy-dot" data-section="goal" aria-label="Цель игры"></button>
@@ -575,29 +546,25 @@
     <button class="spy-dot" data-section="join" aria-label="Присоединиться"></button>
   </nav>
 
-  <!-- Модальное окно -->
+  <!-- Модалка — скрыта по умолчанию через visibility + opacity -->
   <div id="modal-overlay" role="dialog" aria-modal="true" aria-label="IP скопирован">
     <div id="modal-content">
       <i data-lucide="check-circle" class="w-12 h-12 text-green-500 mx-auto mb-4"></i>
       <h3 class="text-xl font-semibold mb-2">IP скопирован!</h3>
       <p class="text-white/60 text-sm">epicwars.ender-zone.com</p>
-      <button class="mt-4 btn-primary bg-white text-black px-6 py-2 text-xs uppercase rounded-sm" onclick="closeModal()">Закрыть</button>
+      <button class="mt-4 btn-primary bg-white text-black px-6 py-2 text-xs uppercase rounded-sm" id="modal-close-btn">Закрыть</button>
     </div>
   </div>
 
-  <!-- Scroll Progress Bar -->
   <div id="scroll-progress" aria-hidden="true"></div>
 
-  <!-- Scroll-to-top Button -->
   <button id="scroll-top" aria-label="Наверх">
     <i data-lucide="chevron-up" class="w-5 h-5"></i>
   </button>
 
-  <!-- ═══════════ HEADER ═══════════ -->
   <header id="main-header" class="fixed top-0 left-0 right-0 z-50">
     <div class="max-w-6xl mx-auto px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
-        <!-- Logo -->
         <a href="#hero" class="flex items-center gap-3 group">
           <div class="w-9 h-9 flex items-center justify-center bg-[#FF6B35] transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-[#FF6B35]/30">
             <span class="text-white font-bold text-sm font-mono">EW</span>
@@ -605,7 +572,6 @@
           <span class="text-white font-bold tracking-widest text-sm uppercase font-mono group-hover:text-[#FF6B35] transition-colors duration-300">EpicWars</span>
         </a>
 
-        <!-- Desktop Nav -->
         <nav class="hidden lg:flex items-center gap-10" aria-label="Основная навигация">
           <a href="#goal" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white" data-section="goal">Цель игры</a>
           <a href="#rules" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white" data-section="rules">Правила</a>
@@ -614,9 +580,8 @@
           <a href="#join" class="btn-primary bg-white text-black px-6 py-2.5 text-xs font-semibold uppercase tracking-widest hover:bg-[#FF6B35] hover:text-white transition-all duration-300 rounded-sm">Играть</a>
         </nav>
 
-        <!-- Mobile controls -->
         <div class="flex items-center gap-3">
-          <button class="share-btn p-2 text-white/70 hover:text-white lg:hidden" onclick="shareSite()" aria-label="Поделиться">
+          <button class="share-btn p-2 text-white/70 hover:text-white lg:hidden" aria-label="Поделиться">
             <i data-lucide="share-2" class="w-5 h-5"></i>
           </button>
           <button class="lg:hidden p-2 text-white" aria-label="Открыть меню" id="menu-toggle">
@@ -626,10 +591,9 @@
       </div>
     </div>
 
-    <!-- Mobile Menu (Drawer) -->
     <div id="mobile-menu" class="closed">
       <div class="drawer-content">
-        <button class="absolute top-4 right-4 text-white" aria-label="Закрыть меню" onclick="toggleMenu(true)">
+        <button class="absolute top-4 right-4 text-white" aria-label="Закрыть меню" id="menu-close">
           <i data-lucide="x" class="w-6 h-6"></i>
         </button>
         <nav class="flex flex-col gap-5 mt-12">
@@ -639,7 +603,7 @@
           <a href="#faq" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">FAQ</a>
           <a href="#reviews" class="nav-link text-xs font-medium uppercase tracking-widest text-white/80 hover:text-white transition-colors">Отзывы</a>
           <a href="#join" class="btn-primary bg-white text-black px-6 py-3 text-xs font-semibold uppercase tracking-widest text-center hover:bg-[#FF6B35] hover:text-white transition-colors duration-300 mt-2 rounded-sm">Играть</a>
-          <button class="share-btn flex items-center gap-2 text-white/70 hover:text-white mt-4" onclick="shareSite()">
+          <button class="share-btn flex items-center gap-2 text-white/70 hover:text-white mt-4">
             <i data-lucide="share-2" class="w-4 h-4"></i>
             <span class="text-xs uppercase tracking-widest">Поделиться</span>
           </button>
@@ -648,7 +612,6 @@
     </div>
   </header>
 
-  <!-- ═══════════ HERO ═══════════ -->
   <section id="hero" class="min-h-screen flex items-center justify-center px-6 relative bg-[var(--bg-dark)]">
     <canvas id="particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true"></canvas>
     <div class="hero-grid absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 60px 60px;" aria-hidden="true"></div>
@@ -673,7 +636,6 @@
         </a>
       </div>
 
-      <!-- Stats -->
       <div class="mt-20 flex flex-col sm:flex-row justify-center gap-12 sm:gap-16 fade-in" data-delay="5">
         <div class="group">
           <p class="font-serif text-4xl text-white counter-num group-hover:text-[#FF6B35] transition-colors" data-target="4">0</p>
@@ -692,7 +654,6 @@
       </div>
     </div>
 
-    <!-- Scroll indicator -->
     <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 fade-in" data-delay="5" aria-hidden="true">
       <span class="font-mono text-[10px] uppercase tracking-widest text-white/20">Scroll</span>
       <div class="w-5 h-8 border border-white/15 rounded-full flex justify-center pt-1.5">
@@ -701,7 +662,6 @@
     </div>
   </section>
 
-  <!-- ═══════════ GOAL ═══════════ -->
   <section id="goal" class="py-32 lg:py-40 px-6 bg-[var(--bg-dark)]">
     <div class="max-w-6xl mx-auto">
       <div class="fade-in mb-20">
@@ -712,7 +672,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-0">
-        <!-- Step 1 -->
         <div class="rule-card pt-10 pb-10 pr-8 slide-in-left" data-delay="1">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">01</span>
@@ -727,7 +686,6 @@
           <p class="font-mono text-xs text-white/20 mt-6 uppercase tracking-widest">4 базы · полное разрушение</p>
         </div>
 
-        <!-- Step 2 -->
         <div class="rule-card pt-10 pb-10 px-8 fade-in" data-delay="2" style="border-left: 1px solid rgba(255,255,255,0.08);">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">02</span>
@@ -742,7 +700,6 @@
           <p class="font-mono text-xs text-white/20 mt-6 uppercase tracking-widest">Главная база · доставка</p>
         </div>
 
-        <!-- Step 3 -->
         <div class="rule-card pt-10 pb-10 pl-8 slide-in-right" data-delay="3" style="border-left: 1px solid rgba(255,255,255,0.08);">
           <div class="flex items-start gap-4 mb-6">
             <span class="font-mono text-xs text-white/25 mt-1">03</span>
@@ -760,7 +717,6 @@
     </div>
   </section>
 
-  <!-- ═══════════ TEAMWORK ═══════════ -->
   <section id="teamwork" class="py-32 lg:py-40 px-6 bg-[var(--bg-darker)]">
     <div class="max-w-6xl mx-auto">
       <div class="fade-in-scale mb-20 text-center">
@@ -796,7 +752,6 @@
         </div>
       </div>
 
-      <!-- Important note -->
       <div class="mt-12 p-8 border border-white/[0.08] fade-in glow-border transition-all duration-300 hover:border-[#FF6B35]/40">
         <div class="flex flex-col sm:flex-row gap-6 items-start">
           <i data-lucide="info" class="w-5 h-5 text-white/30 mt-0.5 flex-shrink-0"></i>
@@ -808,7 +763,6 @@
     </div>
   </section>
 
-  <!-- ═══════════ RULES ═══════════ -->
   <section id="rules" class="py-32 lg:py-40 px-6 bg-[var(--bg-dark)]">
     <div class="max-w-6xl mx-auto">
       <div class="fade-in mb-20">
@@ -822,7 +776,6 @@
       </div>
 
       <div class="space-y-0 fade-in">
-        <!-- Rule 1: Chat -->
         <div class="rule-card py-10">
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
@@ -834,7 +787,7 @@
             </div>
             <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div class="flex gap-3">
-                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                <div class="check-box" style="border:1px solid rgba(255,107,53,0.3);">
                   <span class="text-xs font-mono accent-color">✕</span>
                 </div>
                 <div>
@@ -843,7 +796,7 @@
                 </div>
               </div>
               <div class="flex gap-3">
-                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                <div class="check-box" style="border:1px solid rgba(255,107,53,0.3);">
                   <span class="text-xs font-mono accent-color">✕</span>
                 </div>
                 <div>
@@ -861,7 +814,7 @@
                 </div>
               </div>
               <div class="flex gap-3">
-                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                <div class="check-box" style="border:1px solid rgba(255,107,53,0.3);">
                   <span class="text-xs font-mono accent-color">✕</span>
                 </div>
                 <div>
@@ -873,7 +826,6 @@
           </div>
         </div>
 
-        <!-- Rule 2: PvP -->
         <div class="rule-card py-10">
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
@@ -885,7 +837,7 @@
             </div>
             <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div class="flex gap-3">
-                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                <div class="check-box" style="border:1px solid rgba(255,107,53,0.3);">
                   <span class="text-xs font-mono accent-color">✕</span>
                 </div>
                 <div>
@@ -906,7 +858,6 @@
           </div>
         </div>
 
-        <!-- Rule 3: City -->
         <div class="rule-card py-10">
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
@@ -930,7 +881,6 @@
           </div>
         </div>
 
-        <!-- Rule 4: Bases -->
         <div class="rule-card py-10">
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
@@ -957,7 +907,6 @@
           </div>
         </div>
 
-        <!-- Rule 5: Warehouse -->
         <div class="rule-card py-10">
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
@@ -975,7 +924,7 @@
                 <p class="text-sm text-white/40 leading-relaxed">Лимит: не больше 1 стака (64 шт.) одного типа ресурса в сутки. Можно взять 64 булыжника И 64 дерева, но нельзя 128 булыжника.</p>
               </div>
               <div class="flex gap-3">
-                <div class="check-box accent-border" style="border-width:1px;border-style:solid;">
+                <div class="check-box" style="border:1px solid rgba(255,107,53,0.3);">
                   <span class="text-xs font-mono accent-color">✕</span>
                 </div>
                 <p class="text-sm text-white/40 leading-relaxed">Кража со склада строго запрещена. Все операции логируются — администрация найдёт виновного.</p>
@@ -984,7 +933,6 @@
           </div>
         </div>
 
-        <!-- Rule 6: Mods -->
         <div class="rule-card py-10">
           <div class="flex flex-col lg:flex-row gap-8 lg:gap-16">
             <div class="flex-shrink-0">
@@ -1018,7 +966,6 @@
     </div>
   </section>
 
-  <!-- ═══════════ PUNISHMENTS ═══════════ -->
   <section id="punishments" class="py-32 lg:py-40 px-6 bg-[var(--bg-darker)]">
     <div class="max-w-6xl mx-auto">
       <div class="fade-in mb-20">
@@ -1029,7 +976,6 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start fade-in">
-        <!-- Steps -->
         <div class="space-y-0">
           <div class="punish-step flex gap-8 py-8 border-b border-white/[0.08] hover:border-[#FF6B35]/30 transition-colors">
             <div class="flex-shrink-0 text-center">
@@ -1072,7 +1018,6 @@
           </div>
         </div>
 
-        <!-- Reminder -->
         <div>
           <div class="p-6 border border-white/5 bg-white/[0.01] hover:border-[#FF6B35]/30 transition-all duration-300 rounded-sm glow-border">
             <p class="text-xs font-mono text-white/20 uppercase tracking-widest mb-3">Помни</p>
@@ -1085,7 +1030,6 @@
     </div>
   </section>
 
-  <!-- ═══════════ FAQ ═══════════ -->
   <section id="faq" class="py-32 lg:py-40 px-6 bg-[var(--bg-dark)]">
     <div class="max-w-6xl mx-auto">
       <div class="fade-in mb-20">
@@ -1171,7 +1115,6 @@
     </div>
   </section>
 
-  <!-- ═══════════ REVIEWS ═══════════ -->
   <section id="reviews" class="py-32 lg:py-40 px-6 bg-[var(--bg-darker)]">
     <div class="max-w-6xl mx-auto">
       <div class="fade-in-scale mb-20 text-center">
@@ -1230,7 +1173,6 @@
     </div>
   </section>
 
-  <!-- ═══════════ JOIN / CTA ═══════════ -->
   <section id="join" class="py-32 lg:py-40 px-6 bg-[var(--bg-dark)]">
     <div class="max-w-4xl mx-auto text-center fade-in">
       <span class="badge mb-8 block w-fit mx-auto">Присоединиться</span>
@@ -1241,7 +1183,6 @@
         Minecraft Java Edition 1.21.1. Подключись прямо сейчас и найди свою команду.
       </p>
 
-      <!-- IP Block -->
       <div class="flex flex-col sm:flex-row items-center justify-center gap-0 max-w-xl mx-auto mb-10">
         <div class="flex-1 w-full border border-white/15 px-6 py-4 bg-white/[0.02] flex items-center gap-3 rounded-l-sm">
           <i data-lucide="server" class="w-4 h-4 text-white/30 flex-shrink-0"></i>
@@ -1262,7 +1203,7 @@
           <i data-lucide="book-open" class="w-4 h-4"></i>
           Читать правила
         </a>
-        <button class="btn-outline border border-white/[0.08] text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-all duration-300 flex items-center justify-center gap-2 rounded-sm share-btn" id="share-btn-cta">
+        <button class="btn-outline border border-white/[0.08] text-white/40 px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:text-white hover:border-white/25 transition-all duration-300 flex items-center justify-center gap-2 rounded-sm share-btn">
           <i data-lucide="share-2" class="w-4 h-4"></i>
           Поделиться
         </button>
@@ -1272,11 +1213,9 @@
     </div>
   </section>
 
-  <!-- ═══════════ FOOTER ═══════════ -->
   <footer>
     <div class="max-w-6xl mx-auto px-6 lg:px-8 py-16">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-        <!-- Brand -->
         <div>
           <div class="flex items-center gap-3 mb-5">
             <div class="w-9 h-9 flex items-center justify-center bg-[#FF6B35]">
@@ -1288,13 +1227,12 @@
             Тактическая командная игра. Взрывай базы, захватывай флаги, побеждай.
           </p>
           <p class="font-mono text-xs text-white/25 mt-4">Версия 1.21.1</p>
-          <button class="share-btn flex items-center gap-2 text-white/40 hover:text-white mt-4" id="share-btn-footer">
+          <button class="share-btn flex items-center gap-2 text-white/40 hover:text-white mt-4">
             <i data-lucide="share-2" class="w-4 h-4"></i>
             <span class="text-xs uppercase tracking-widest">Поделиться сайтом</span>
           </button>
         </div>
 
-        <!-- Nav -->
         <div>
           <p class="text-xs uppercase tracking-widest text-white/30 mb-5 font-mono">Навигация</p>
           <nav class="flex flex-col gap-3" aria-label="Навигация в подвале">
@@ -1308,7 +1246,6 @@
           </nav>
         </div>
 
-        <!-- Contacts -->
         <div>
           <p class="text-xs uppercase tracking-widest text-white/30 mb-5 font-mono">Контакты</p>
           <p class="text-sm text-white/50">IP: <span class="font-mono text-white">epicwars.ender-zone.com</span></p>
@@ -1323,31 +1260,22 @@
   </footer>
 
   <script>
-    // ═══════════════════════════════════════
-    // Ждём загрузку Lucide (defer) и инициализируем
-    // ═══════════════════════════════════════
     document.addEventListener('DOMContentLoaded', () => {
-      // Lucide может загрузиться после DOMContentLoaded из-за defer
-      if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-      }
+      if (typeof lucide !== 'undefined') lucide.createIcons();
     });
-    // Повторная попытка на случай если скрипт ещё не загрузился
     window.addEventListener('load', () => {
       if (typeof lucide !== 'undefined') lucide.createIcons();
       document.body.classList.remove('loading');
       document.body.classList.add('loaded');
     });
 
-    // ═══════════════════════════════════════
-    // Кэшируем DOM-элементы
-    // ═══════════════════════════════════════
     const cursor = document.getElementById('custom-cursor');
     const header = document.getElementById('main-header');
     const scrollProgress = document.getElementById('scroll-progress');
     const scrollTopBtn = document.getElementById('scroll-top');
     const heroGrid = document.querySelector('.hero-grid');
     const menuToggle = document.getElementById('menu-toggle');
+    const menuClose = document.getElementById('menu-close');
     const mobileMenu = document.getElementById('mobile-menu');
     const menuIcon = menuToggle?.querySelector('i');
     const sections = document.querySelectorAll('section[id]');
@@ -1355,75 +1283,54 @@
     const navLinks = document.querySelectorAll('.nav-link[data-section]');
     const modalOverlay = document.getElementById('modal-overlay');
 
-    // ═══════════════════════════════════════
-    // Кастомный курсор
-    // ═══════════════════════════════════════
+    // Курсор
     if (cursor && window.matchMedia('(min-width: 769px)').matches) {
       document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
       }, { passive: true });
 
-      // Hover-эффект через делегирование
       const interactiveSelector = 'a, button, .btn-primary, .btn-outline, .nav-link, .rule-card, .faq-trigger, .share-btn, .spy-dot, .team-card, .review-card';
-
       document.addEventListener('mouseover', (e) => {
-        if (e.target.closest(interactiveSelector)) {
-          cursor.classList.add('hovering');
-        }
+        if (e.target.closest(interactiveSelector)) cursor.classList.add('hovering');
       }, { passive: true });
-
       document.addEventListener('mouseout', (e) => {
-        if (e.target.closest(interactiveSelector)) {
-          cursor.classList.remove('hovering');
-        }
+        if (e.target.closest(interactiveSelector)) cursor.classList.remove('hovering');
       }, { passive: true });
     }
 
-    // ═══════════════════════════════════════
-    // Мобильное меню (Drawer)
-    // ═══════════════════════════════════════
+    // Мобильное меню
     function toggleMenu(forceClose) {
       if (!mobileMenu) return;
       const shouldClose = forceClose || mobileMenu.classList.contains('opened');
-
       mobileMenu.classList.toggle('opened', !shouldClose);
       mobileMenu.classList.toggle('closed', shouldClose);
       if (menuIcon) menuIcon.style.transform = shouldClose ? 'rotate(0deg)' : 'rotate(90deg)';
     }
 
-    menuToggle?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleMenu();
-    });
-
+    menuToggle?.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
+    menuClose?.addEventListener('click', () => toggleMenu(true));
     mobileMenu?.addEventListener('click', (e) => {
-      // Закрытие при клике на оверлей или на ссылку
-      if (e.target === mobileMenu || e.target.closest('a')) {
-        toggleMenu(true);
-      }
+      if (e.target === mobileMenu || e.target.closest('a')) toggleMenu(true);
     });
 
-    // ═══════════════════════════════════════
-    // Частицы на Canvas (оптимизированные)
-    // ═══════════════════════════════════════
+    // Частицы
     const canvas = document.getElementById('particle-canvas');
     if (canvas) {
       const ctx = canvas.getContext('2d');
       let particles = [];
       let canvasW, canvasH;
-      const PARTICLE_COUNT = 50;
 
       function initParticles() {
         canvasW = canvas.width = window.innerWidth;
         canvasH = canvas.height = window.innerHeight;
-        particles = Array.from({ length: PARTICLE_COUNT }, () => ({
+        particles = Array.from({ length: 50 }, () => ({
           x: Math.random() * canvasW,
           y: Math.random() * canvasH,
           size: Math.random() * 2 + 1,
           speedX: (Math.random() - 0.5) * 0.5,
           speedY: (Math.random() - 0.5) * 0.5,
-          alpha: Math.random() * 0.3 + 0.2, // Фиксированная прозрачность — нет мерцания
+          alpha: Math.random() * 0.3 + 0.2,
         }));
       }
 
@@ -1432,13 +1339,10 @@
         for (const p of particles) {
           p.x += p.speedX;
           p.y += p.speedY;
-
-          // Зацикливание
           if (p.x < 0) p.x = canvasW;
           else if (p.x > canvasW) p.x = 0;
           if (p.y < 0) p.y = canvasH;
           else if (p.y > canvasH) p.y = 0;
-
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(255, 107, 53, ${p.alpha})`;
@@ -1447,21 +1351,17 @@
         requestAnimationFrame(animateParticles);
       }
 
-      let resizeTimeout;
+      let resizeTimer;
       window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(initParticles, 200);
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(initParticles, 200);
       }, { passive: true });
-
       initParticles();
       animateParticles();
     }
 
-    // ═══════════════════════════════════════
-    // Единый обработчик scroll (вместо 5 отдельных)
-    // ═══════════════════════════════════════
+    // Единый scroll-обработчик
     let scrollTicking = false;
-
     window.addEventListener('scroll', () => {
       if (!scrollTicking) {
         requestAnimationFrame(handleScroll);
@@ -1473,17 +1373,10 @@
       const scrollY = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-      // 1. Header state
       header.classList.toggle('scrolled', scrollY > 60);
-
-      // 2. Scroll progress bar
-      const scrollPercent = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
-      scrollProgress.style.width = scrollPercent + '%';
-
-      // 3. Scroll-to-top button
+      scrollProgress.style.width = (docHeight > 0 ? (scrollY / docHeight) * 100 : 0) + '%';
       scrollTopBtn.classList.toggle('visible', scrollY > 500);
 
-      // 4. Active section (scroll spy + nav links)
       const checkY = scrollY + 120;
       let currentSection = '';
       for (const section of sections) {
@@ -1496,7 +1389,6 @@
       dots.forEach(d => d.classList.toggle('active', d.dataset.section === currentSection));
       navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === currentSection));
 
-      // 5. Hero parallax
       if (heroGrid && scrollY < window.innerHeight) {
         heroGrid.style.transform = `translateY(${scrollY * 0.3}px)`;
       }
@@ -1504,52 +1396,33 @@
       scrollTicking = false;
     }
 
-    // ═══════════════════════════════════════
-    // Scroll spy dots — click handler
-    // ═══════════════════════════════════════
+    // Scroll spy click
     dots.forEach(dot => {
       dot.addEventListener('click', () => {
         const target = document.getElementById(dot.dataset.section);
-        if (target) {
-          window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-        }
+        if (target) window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
       });
     });
 
-    // ═══════════════════════════════════════
-    // Scroll-to-top
-    // ═══════════════════════════════════════
+    // Scroll to top
     scrollTopBtn.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // ═══════════════════════════════════════
-    // Модальное окно
-    // ═══════════════════════════════════════
-    function showModal() {
-      modalOverlay.classList.add('active');
-    }
-
-    function closeModal() {
-      modalOverlay.classList.remove('active');
-    }
+    // Модалка
+    function showModal() { modalOverlay.classList.add('active'); }
+    function closeModal() { modalOverlay.classList.remove('active'); }
     window.closeModal = closeModal;
 
-    // Закрытие по клику на оверлей
+    document.getElementById('modal-close-btn')?.addEventListener('click', closeModal);
     modalOverlay?.addEventListener('click', (e) => {
       if (e.target === modalOverlay) closeModal();
     });
-
-    // Закрытие по Escape
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
-        closeModal();
-      }
+      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
     });
 
-    // ═══════════════════════════════════════
     // Копирование IP
-    // ═══════════════════════════════════════
     const copyBtn = document.getElementById('copy-ip-btn');
     const copyLabel = document.getElementById('copy-label');
     const SERVER_IP = 'epicwars.ender-zone.com';
@@ -1558,23 +1431,20 @@
       try {
         await navigator.clipboard.writeText(SERVER_IP);
       } catch {
-        // Fallback для старых браузеров
-        const textarea = document.createElement('textarea');
-        textarea.value = SERVER_IP;
-        textarea.style.cssText = 'position:fixed;opacity:0';
-        document.body.appendChild(textarea);
-        textarea.select();
+        const ta = document.createElement('textarea');
+        ta.value = SERVER_IP;
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
         document.execCommand('copy');
-        textarea.remove();
+        ta.remove();
       }
       copyLabel.textContent = 'Скопировано!';
       showModal();
       setTimeout(() => { copyLabel.textContent = 'Копировать'; }, 2000);
     });
 
-    // ═══════════════════════════════════════
-    // Поделиться сайтом
-    // ═══════════════════════════════════════
+    // Поделиться
     function shareSite() {
       if (navigator.share) {
         navigator.share({
@@ -1588,64 +1458,46 @@
         }).catch(() => {});
       }
     }
-
-    // Привязка share кнопок через делегирование
-    document.querySelectorAll('.share-btn, [onclick="shareSite()"]').forEach(btn => {
-      btn.removeAttribute('onclick');
+    document.querySelectorAll('.share-btn').forEach(btn => {
       btn.addEventListener('click', shareSite);
     });
 
-    // ═══════════════════════════════════════
     // Год в футере
-    // ═══════════════════════════════════════
     document.getElementById('footer-year').textContent = new Date().getFullYear();
 
-    // ═══════════════════════════════════════
-    // Intersection Observer для анимаций
-    // ═══════════════════════════════════════
+    // Intersection Observer
     const animObserver = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          animObserver.unobserve(entry.target); // Не наблюдаем после появления
+          animObserver.unobserve(entry.target);
         }
       }
     }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
-
     document.querySelectorAll('.fade-in, .fade-in-up, .fade-in-scale, .slide-in-left, .slide-in-right')
       .forEach(el => animObserver.observe(el));
 
-    // ═══════════════════════════════════════
-    // Счётчики (анимация при наведении)
-    // ═══════════════════════════════════════
+    // Счётчики
     document.querySelectorAll('.counter-num').forEach(counter => {
       const target = parseInt(counter.dataset.target) || 0;
       let timer = null;
-
       counter.addEventListener('mouseenter', () => {
-        if (timer) clearInterval(timer); // Предотвращаем наложение
+        if (timer) clearInterval(timer);
         let current = 0;
         const increment = Math.max(target / 20, 1);
         timer = setInterval(() => {
           current += increment;
-          if (current >= target) {
-            current = target;
-            clearInterval(timer);
-            timer = null;
-          }
+          if (current >= target) { current = target; clearInterval(timer); timer = null; }
           counter.textContent = Math.round(current);
         }, 30);
       });
-
       counter.addEventListener('mouseleave', () => {
         if (timer) { clearInterval(timer); timer = null; }
         counter.textContent = target;
       });
     });
 
-    // ═══════════════════════════════════════
-    // FAQ Accordion
-    // ═══════════════════════════════════════
+    // FAQ
     document.querySelectorAll('.faq-trigger').forEach(btn => {
       btn.addEventListener('click', function () {
         const card = this.closest('.rule-card');
@@ -1653,7 +1505,6 @@
         const icon = card.querySelector('.faq-icon');
         const isOpen = answer.classList.contains('open');
 
-        // Закрыть все
         document.querySelectorAll('.faq-answer.open').forEach(a => {
           a.classList.remove('open');
           a.style.maxHeight = '0px';
@@ -1661,7 +1512,6 @@
         document.querySelectorAll('.faq-icon.rotated').forEach(i => i.classList.remove('rotated'));
         document.querySelectorAll('.faq-trigger[aria-expanded="true"]').forEach(t => t.setAttribute('aria-expanded', 'false'));
 
-        // Открыть текущий (если был закрыт)
         if (!isOpen) {
           answer.classList.add('open');
           answer.style.maxHeight = answer.scrollHeight + 'px';
